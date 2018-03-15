@@ -1,8 +1,8 @@
 <?php
 
-namespace MarkVilludo\Permission\Traits;
+namespace Spatie\Permission\Traits;
 
-use MarkVilludo\Permission\Contracts\Permission;
+use Spatie\Permission\Contracts\Permission;
 
 trait HasPermissions
 {

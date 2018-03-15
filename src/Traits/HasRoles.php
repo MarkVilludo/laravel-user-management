@@ -1,10 +1,10 @@
 <?php
 
-namespace MarkVilludo\Permission\Traits;
+namespace Spatie\Permission\Traits;
 
 use Illuminate\Support\Collection;
-use MarkVilludo\Permission\Contracts\Role;
-use MarkVilludo\Permission\Contracts\Permission;
+use Spatie\Permission\Contracts\Role;
+use Spatie\Permission\Contracts\Permission;
 
 trait HasRoles
 {
@@ -74,9 +74,9 @@ trait HasRoles
     /**
      * Assign the given role to the user.
      *
-     * @param array|string|\MarkVilludo\Permission\Models\Role ...$roles
+     * @param array|string|\Spatie\Permission\Models\Role ...$roles
      *
-     * @return \MarkVilludo\Permission\Contracts\Role
+     * @return \Spatie\Permission\Contracts\Role
      */
     public function assignRole(...$roles)
     {

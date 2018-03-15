@@ -1,6 +1,6 @@
 <?php
 
-namespace MarkVilludo\Permission\Exceptions;
+namespace Spatie\Permission\Exceptions;
 
 use Exception;
 

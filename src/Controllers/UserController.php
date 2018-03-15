@@ -1,10 +1,10 @@
 <?php
 
-namespace MarkVilludo\Permission\Controllers;
+namespace Spatie\Permission\Controllers;
 
-use MarkVilludo\Permission\Models\Permission;
+use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\Controller;
-use MarkVilludo\Permission\Models\Role;
+use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use App\User;
 use Session;

@@ -28,12 +28,12 @@
     },
     "autoload": {
         "psr-4": {
-            "MarkVilludo\\Permission\\": "src"
+            "Spatie\\Permission\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MarkVilludo\\Permission\\Test\\": "tests"
+            "Spatie\\Permission\\Test\\": "tests"
         }
     },
     "scripts": {
@@ -45,7 +45,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "MarkVilludo\\Permission\\PermissionServiceProvider"
+                "Spatie\\Permission\\PermissionServiceProvider"
             ]
         }
     }

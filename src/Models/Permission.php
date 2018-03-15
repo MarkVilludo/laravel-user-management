@@ -1,11 +1,11 @@
 <?php
 
-namespace MarkVilludo\Permission\Models;
+namespace Spatie\Permission\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use MarkVilludo\Permission\Traits\RefreshesPermissionCache;
-use MarkVilludo\Permission\Exceptions\PermissionDoesNotExist;
-use MarkVilludo\Permission\Contracts\Permission as PermissionContract;
+use Spatie\Permission\Traits\RefreshesPermissionCache;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
+use Spatie\Permission\Contracts\Permission as PermissionContract;
 
 class Permission extends Model implements PermissionContract
 {

@@ -11,9 +11,9 @@
 |
 */
 
-Route::resource('users', 'MarkVilludo\Permission\Controllers\UserController');
+Route::resource('users', 'Spatie\Permission\Controllers\UserController');
 
-Route::resource('roles', 'MarkVilludo\Permission\Controllers\RoleController');
+Route::resource('roles', 'Spatie\Permission\Controllers\RoleController');
 
-Route::resource('permissions', 'MarkVilludo\Permission\Controllers\PermissionController');
+Route::resource('permissions', 'Spatie\Permission\Controllers\PermissionController');
 
