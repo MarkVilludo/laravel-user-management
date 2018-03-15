@@ -47,7 +47,12 @@
         "laravel": {
             "providers": [
                 "MarkVilludo\\Permission\\PermissionServiceProvider",
-                "Collective\\Html\\HtmlServiceProvider,"
+                "Collective\\Html\\HtmlServiceProvider"
+            ],
+             "aliases" : [
+                "Illuminate\\Support\\Facades\\View",
+                "Collective\\Html\\FormFacade",
+                "Collective\\Html\\HtmlFacade",
             ]
         }
     }
