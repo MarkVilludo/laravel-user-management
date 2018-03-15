@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Session;
 use Auth;
+use View;
 
 class UserController extends Controller
 {
