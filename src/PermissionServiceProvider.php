@@ -1,16 +1,16 @@
 <?php
 
-namespace MarkVilludo\Permission;
+namespace Spatie\Permission;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
-use MarkVilludo\Permission\Contracts\Role as RoleContract;
-use MarkVilludo\Permission\Contracts\Permission as PermissionContract;
+use Spatie\Permission\Contracts\Role as RoleContract;
+use Spatie\Permission\Contracts\Permission as PermissionContract;
 
 class PermissionServiceProvider extends ServiceProvider
 {
     /**
-     * @param \MarkVilludo\Permission\PermissionRegistrar $permissionLoader
+     * @param \Spatie\Permission\PermissionRegistrar $permissionLoader
      */
     public function boot(PermissionRegistrar $permissionLoader)
     {   

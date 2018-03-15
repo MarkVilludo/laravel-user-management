@@ -1,12 +1,12 @@
 <?php
 
-namespace MarkVilludo\Permission\Models;
+namespace Spatie\Permission\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use MarkVilludo\Permission\Traits\HasPermissions;
-use MarkVilludo\Permission\Exceptions\RoleDoesNotExist;
-use MarkVilludo\Permission\Contracts\Role as RoleContract;
-use MarkVilludo\Permission\Traits\RefreshesPermissionCache;
+use Spatie\Permission\Traits\HasPermissions;
+use Spatie\Permission\Exceptions\RoleDoesNotExist;
+use Spatie\Permission\Contracts\Role as RoleContract;
+use Spatie\Permission\Traits\RefreshesPermissionCache;
 
 class Role extends Model implements RoleContract
 {
