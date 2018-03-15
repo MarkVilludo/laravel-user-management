@@ -13,15 +13,9 @@ class PermissionServiceProvider extends ServiceProvider
      * @param \Spatie\Permission\PermissionRegistrar $permissionLoader
      */
     public function boot(PermissionRegistrar $permissionLoader)
-    {   
-        $this->loadViewsFrom(__DIR__.'/../views', 'laravel-permission');
-
+    {
         $this->publishes([
-           __DIR__.'/../views' => resource_path(''),
-        ],'views');
-
-        $this->publishes([
-            __DIR__.'/../resources/config/laravel-permission.php' => $this->app->configPath().'/'.'permission.php',
+            __DIR__.'/../resources/config/laravel-permission.php' => $this->app->configPath().'/'.'laravel-permission.php',
         ], 'config');
 
         if (! class_exists('CreatePermissionTables')) {
@@ -31,9 +25,7 @@ class PermissionServiceProvider extends ServiceProvider
                 __DIR__.'/../resources/migrations/create_permission_tables.php.stub' => $this->app->databasePath().'/migrations/'.$timestamp.'_create_permission_tables.php',
             ], 'migrations');
         }
-        
-        //register routes
-        $this->registerRoutes();
+
         $this->registerModelBindings();
 
         $permissionLoader->registerPermissions();
@@ -89,9 +81,4 @@ class PermissionServiceProvider extends ServiceProvider
             });
         });
     }
-    protected function registerRoutes()
-    {
-        include __DIR__.'/routes/api.php';
-        include __DIR__.'/routes/web.php';
-    }  
 }
