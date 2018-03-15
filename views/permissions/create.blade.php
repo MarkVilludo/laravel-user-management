@@ -6,35 +6,34 @@
 
 <div class='col-lg-4 col-lg-offset-4'>
 
-    {{-- @include ('errors.list') --}}
+{{-- @include ('errors.list') --}}
 
-    <h1><i class='fa fa-key'></i> Add Permission</h1>
-    <br>
+{{ Form::open(array('url' => 'permissions')) }}
 
-    {{ Form::open(array('url' => 'permissions')) }}
+<div class="form-group">
+    {{ Form::label('name', 'Name') }}
+    {{ Form::text('name', '', array('class' => 'form-control')) }}
+</div>
+<br>
+<div class="form-group">
+    {{ Form::label('module', 'Module Name') }}
+    {{ Form::text('module', '', array('class' => 'form-control')) }}
+</div>
+<br>
+<h5><b>Assign Permission to Roles</b></h5>
+    <div class="row">
+        <div class='col-lg-6 form-group'>
+            @foreach ($roles as $role)
+                {{ Form::checkbox('roles[]',  $role->id) }}
+                {{ Form::label($role->name, ucfirst($role->name)) }}<br>
 
-    <div class="form-group">
-        {{ Form::label('name', 'Name') }}
-        {{ Form::text('name', '', array('class' => 'form-control')) }}
+            @endforeach
+        </div>
     </div>
-    <br>
+<br>
+{{ Form::submit('Add', array('class' => 'btn btn-primary')) }}
 
-    @if(!$roles->isEmpty())
-
-        <h4>Assign Permission to Roles</h4>
-
-        @foreach ($roles as $role) 
-            {{ Form::checkbox('roles[]',  $role->id ) }}
-            {{ Form::label($role->name, ucfirst($role->name)) }}<br>
-
-        @endforeach
-
-    @endif
-    
-    <br>
-    {{ Form::submit('Add', array('class' => 'btn btn-primary')) }}
-
-    {{ Form::close() }}
+{{ Form::close() }}
 
 </div>
 
