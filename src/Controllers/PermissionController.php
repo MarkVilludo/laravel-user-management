@@ -62,8 +62,10 @@ class PermissionController extends Controller
         ]);
 
         $name = $request['name'];
+        $module = $request['module'];
         $permission = new Permission();
         $permission->name = $name;
+        $permission->module = $module;
 
         $roles = $request['roles'];
         
