@@ -1,8 +1,6 @@
 <?php
 
-namespace MarkVilludo\Permission\Contracts;
-
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+namespace Spatie\Permission\Contracts;
 
 interface Role
 {

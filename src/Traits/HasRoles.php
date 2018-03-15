@@ -1,10 +1,10 @@
 <?php
 
-namespace MarkVilludo\Permission\Traits;
+namespace Spatie\Permission\Traits;
 
 use Illuminate\Support\Collection;
-use MarkVilludo\Permission\Contracts\Role;
-use MarkVilludo\Permission\Contracts\Permission;
+use Spatie\Permission\Contracts\Role;
+use Spatie\Permission\Contracts\Permission;
 
 trait HasRoles
 {
@@ -19,8 +19,8 @@ trait HasRoles
     public function roles()
     {
         return $this->belongsToMany(
-            config('permission.models.role'),
-            config('permission.table_names.user_has_roles')
+            config('laravel-permission.models.role'),
+            config('laravel-permission.table_names.user_has_roles')
         );
     }
 
@@ -32,8 +32,8 @@ trait HasRoles
     public function permissions()
     {
         return $this->belongsToMany(
-            config('permission.models.permission'),
-            config('permission.table_names.user_has_permissions')
+            config('laravel-permission.models.permission'),
+            config('laravel-permission.table_names.user_has_permissions')
         );
     }
 
@@ -65,7 +65,7 @@ trait HasRoles
         return $query->whereHas('roles', function ($query) use ($roles) {
             $query->where(function ($query) use ($roles) {
                 foreach ($roles as $role) {
-                    $query->orWhere(config('permission.table_names.roles').'.id', $role->id);
+                    $query->orWhere(config('laravel-permission.table_names.roles').'.id', $role->id);
                 }
             });
         });
@@ -315,4 +315,3 @@ trait HasRoles
         return $this->permissions->merge($this->getPermissionsViaRoles())->sort()->values();
     }
 }
-

@@ -1,39 +1,17 @@
-# Associate users with permissions and roles
-
-
-### Sponsor
-
-
-<table>
-   <tr>
-      <td><img src="http://markvilludo.github.io/laravel-permission/sponsor-logo.png"></td>
-      <td>If you want to quickly add authentication and authorization to Laravel projects, feel free to check Auth0's Laravel SDK and free plan at <a href="https://auth0.com/overview?utm_source=GHsponsor&utm_medium=GHsponsor&utm_campaign=laravel-permission&utm_content=auth">https://auth0.com/overview</a>.</td>
-   </tr>
-</table>
-
+# Associate users with roles and permissions
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-permission.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-permission)
 [![Build Status](https://img.shields.io/travis/spatie/laravel-permission/master.svg?style=flat-square)](https://travis-ci.org/spatie/laravel-permission)
+[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/a25f93ac-5e8f-48c8-a9a1-5d3ef3f9e8f2.svg?style=flat-square)](https://insight.sensiolabs.com/projects/a25f93ac-5e8f-48c8-a9a1-5d3ef3f9e8f2)
+[![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-permission.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-permission)
 [![StyleCI](https://styleci.io/repos/42480275/shield)](https://styleci.io/repos/42480275)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-permission.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-permission)
 
-* [Installation](#installation)
-* [Usage](#usage)
-  * [Using "direct" permissions](#using-direct-permissions-see-below-to-use-both-roles-and-permissions)
-  * [Using permissions via roles](#using-permissions-via-roles)
-  * [Using Blade directives](#using-blade-directives)
-  * [Using multiple guards](#using-multiple-guards)
-  * [Using a middleware](#using-a-middleware)
-  * [Using artisan commands](#using-artisan-commands)
-* [Unit Testing](#unit-testing)
-* [Database Seeding](#database-seeding)
-* [Extending](#extending)
-* [Cache](#cache)
-
-This package allows you to manage user permissions and roles in a database.
+This package allows to save permissions and roles in a database. It is built upon [Laravel's
+authorization functionality](http://laravel.com/docs/5.1/authorization) that
+was [introduced in version 5.1.11](http://christoph-rumpel.com/2015/09/new-acl-features-in-laravel/).
 
 Once installed you can do stuff like this:
-
 ```php
 // Adding permissions to a user
 $user->givePermissionTo('edit articles');
@@ -44,68 +22,60 @@ $user->assignRole('writer');
 $role->givePermissionTo('edit articles');
 ```
 
-If you're using multiple guards we've got you covered as well. Every guard will have its own set of permissions and roles that can be assigned to the guard's users. Read about it in the [using multiple guards](#using-multiple-guards) section of the readme.
-
-Because all permissions will be registered on [Laravel's gate](https://laravel.com/docs/5.5/authorization), you can test if a user has a permission with Laravel's default `can` function:
-
+You can test if a user has a permission with Laravel's default `can` function:
 ```php
 $user->can('edit articles');
 ```
 
-Spatie is a web design agency in Antwerp, Belgium. You'll find an overview of all
-our open source projects [on our website](https://markvilludo.be/opensource).
+If you are using a Laravel version lower than 5.2.28, and want a drop-in middleware to check permissions, check out [our authorize package](https://github.com/spatie/laravel-authorize).
+
+Spatie is webdesign agency in Antwerp, Belgium. You'll find an overview of all 
+our open source projects [on our website](https://spatie.be/opensource).
+
+## Postcardware
+
+You're free to use this package (it's [MIT-licensed](LICENSE.md)), but if it makes it to your production environment we highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using.
+
+Our address is: Spatie, Samberstraat 69D, 2060 Antwerp, Belgium.
+
+The best postcards will get published on the open source page on our website.
 
 ## Installation
 
-- [Laravel](#laravel)
-- [Lumen](#lumen)
-
-### Laravel
-
-This package can be used in Laravel 5.4 or higher. If you are using an older version of Laravel, take a look at [the v1 branch of this package](https://github.com/spatie/laravel-permission/tree/v1).
-
-You can install the package via composer:
-
+You can install the package via Composer:
 ``` bash
-composer require mark-villudo/laravel-permission
+composer require spatie/laravel-permission:^1.3
 ```
 
-In Laravel 5.5 the service provider will automatically get registered. In older versions of the framework just add the service provider in `config/app.php` file:
-
+Now add the service provider in `config/app.php` file:
 ```php
 'providers' => [
     // ...
-    MarkVilludo\Permission\PermissionServiceProvider::class,
+    Spatie\Permission\PermissionServiceProvider::class,
 ];
 ```
 
-You can publish [the migration](https://github.com/spatie/laravel-permission/blob/master/database/migrations/create_permission_tables.php.stub) with:
+You can publish the migration with:
+```bash
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="migrations"
+```
+
+The package assumes that your users table name is called "users". If this is not the case
+you should manually edit the published migration to use your custom table name.
+
+After the migration has been published you can create the role- and permission-tables by
+running the migrations:
 
 ```bash
-php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="migrations"
+$ php artisan migrate
 ```
 
-If you're using UUIDs or GUIDs for your `User` models you can update the `create_permission_tables.php` migration and replace `$table->morphs('model')` with:
-
-```php
-$table->uuid('model_id');
-$table->string('model_type');
-```
-
-After the migration has been published you can create the role- and permission-tables by running the migrations:
-
+You can publish the config-file with:
 ```bash
-php artisan migrate
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="config"
 ```
 
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="config"
-```
-
-When published, [the `config/permission.php` config file](https://github.com/spatie/laravel-permission/blob/master/config/permission.php) contains:
-
+This is the contents of the published `config/laravel-permission.php` config file:
 ```php
 return [
 
@@ -117,10 +87,10 @@ return [
          * is often just the "Permission" model but you may use whatever you like.
          *
          * The model you want to use as a Permission model needs to implement the
-         * `MarkVilludo\Permission\Contracts\Permission` contract.
+         * `Spatie\Permission\Contracts\Permission` contract.
          */
 
-        'permission' => MarkVilludo\Permission\Models\Permission::class,
+        'permission' => Spatie\Permission\Models\Permission::class,
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -128,14 +98,21 @@ return [
          * is often just the "Role" model but you may use whatever you like.
          *
          * The model you want to use as a Role model needs to implement the
-         * `MarkVilludo\Permission\Contracts\Role` contract.
+         * `Spatie\Permission\Contracts\Role` contract.
          */
 
-        'role' => MarkVilludo\Permission\Models\Role::class,
+        'role' => Spatie\Permission\Models\Role::class,
 
     ],
 
     'table_names' => [
+
+        /*
+         * The table that your application uses for users. This table's model will
+         * be using the "HasRoles" and "HasPermissions" traits.
+         */
+
+        'users' => 'users',
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -155,19 +132,19 @@ return [
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
-         * table should be used to retrieve your models permissions. We have chosen a
+         * table should be used to retrieve your users permissions. We have chosen a
          * basic default value but you may easily change it to any table you like.
          */
 
-        'model_has_permissions' => 'model_has_permissions',
+        'user_has_permissions' => 'user_has_permissions',
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
-         * table should be used to retrieve your models roles. We have chosen a
+         * table should be used to retrieve your users roles. We have chosen a
          * basic default value but you may easily change it to any table you like.
          */
 
-        'model_has_roles' => 'model_has_roles',
+        'user_has_roles' => 'user_has_roles',
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -178,183 +155,68 @@ return [
         'role_has_permissions' => 'role_has_permissions',
     ],
 
+    'foreign_keys' => [
+        
+        /*
+         * The name of the foreign key to the users table.
+         */
+        'users' => 'user_id',
+    ],
+
     /*
-     * By default all permissions will be cached for 24 hours unless a permission or
-     * role is updated. Then the cache will be flushed immediately.
+     *
+     * By default we'll make an entry in the application log when the permissions
+     * could not be loaded. Normally this only occurs while installing the packages.
+     *
+     * If for some reason you want to disable that logging, set this value to false.
      */
 
-    'cache_expiration_time' => 60 * 24,
-    
-    /*
-     * When set to true, the required permission/role names are added to the exception
-     * message. This could be considered an information leak in some contexts, so
-     * the default setting is false here for optimum safety.
-     */
-
-    'display_permission_in_exception' => false,
+    'log_registration_exception' => true,
 ];
-```
-You can publish the resources files with:
-
-```bash
-php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="views"
-```
-
-with the content of the following view folders: and to change views interface just feel free, because its free! :))
-```
-auth\
-errors\
-layouts\
-permissions\
-roles\
-users\
-errors\
-
-```
-### Lumen
-
-You can install the package via Composer:
-
-``` bash
-composer require mark-villudo/laravel-permission
-```
-
-Copy the required files:
-
-```bash
-cp vendor/markvilludo/laravel-permission/config/permission.php config/permission.php
-cp vendor/markvilludo/laravel-permission/database/migrations/create_permission_tables.php.stub database/migrations/2018_01_01_000000_create_permission_tables.php
-```
-
-You will also need to create another configuration file at `config/auth.php`. Get it on the Laravel repository or just run the following command:
-
-```bash
-curl -Ls https://raw.githubusercontent.com/laravel/lumen-framework/5.5/config/auth.php -o config/auth.php
-```
-
-Now, run your migrations:
-
-```bash
-php artisan migrate
-```
-
-Then, in `bootstrap/app.php`, register the middlewares:
-
-```php
-$app->routeMiddleware([
-    'auth'       => App\Http\Middleware\Authenticate::class,
-    'permission' => MarkVilludo\Permission\Middlewares\PermissionMiddleware::class,
-    'role'       => MarkVilludo\Permission\Middlewares\RoleMiddleware::class,
-]);
-```
-
-As well as the configuration and the service provider:
-
-```php
-$app->configure('permission');
-$app->register(MarkVilludo\Permission\PermissionServiceProvider::class);
 ```
 
 ## Usage
 
-First, add the `MarkVilludo\Permission\Traits\HasRoles` trait to your `User` model(s):
-
+First add the `Spatie\Permission\Traits\HasRoles` trait to your User model:
 ```php
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use MarkVilludo\Permission\Traits\HasRoles;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use HasRoles;
-
+    
     // ...
 }
 ```
 
-> - note that if you need to use `HasRoles` trait with another model ex.`Page` you will also need to add `protected $guard_name = 'web';` as well to that model or you would get an error
->
->```php
->use Illuminate\Database\Eloquent\Model;
->use MarkVilludo\Permission\Traits\HasRoles;
->
->class Page extends Model
->{
->    use HasRoles;
->
->    protected $guard_name = 'web'; // or whatever guard you want to use
->
->    // ...
->}
->```
-
-This package allows for users to be associated with permissions and roles. Every role is associated with multiple permissions.
-A `Role` and a `Permission` are regular Eloquent models. They require a `name` and can be created like this:
+This package allows for users to be associated with roles. Permissions can be associated with roles.
+A `Role` and a `Permission` are regular Eloquent models. They can have a name and can be created like this:
 
 ```php
-use MarkVilludo\Permission\Models\Role;
-use MarkVilludo\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 $role = Role::create(['name' => 'writer']);
 $permission = Permission::create(['name' => 'edit articles']);
 ```
 
-
-A permission can be assigned to a role using 1 of these methods:
-
-```php
-$role->givePermissionTo($permission);
-$permission->assignRole($role);
-```
-
-Multiple permissions can be synced to a role using 1 of these methods:
+The `HasRoles` adds Eloquent relationships to your models, which can be accessed directly or used as a base query:
 
 ```php
-$role->syncPermissions($permissions);
-$permission->syncRoles($roles);
-```
-
-A permission can be removed from a role using 1 of these methods:
-
-```php
-$role->revokePermissionTo($permission);
-$permission->removeRole($role);
-```
-
-If you're using multiple guards the `guard_name` attribute needs to be set as well. Read about it in the [using multiple guards](#using-multiple-guards) section of the readme.
-
-The `HasRoles` trait adds Eloquent relationships to your models, which can be accessed directly or used as a base query:
-
-```php
-// get a list of all permissions directly assigned to the user
 $permissions = $user->permissions;
-
-// get all permissions inherited by the user via roles
-$permissions = $user->getAllPermissions();
-
-// get a collection of all defined roles
-$roles = $user->getRoleNames(); // Returns a collection
+$roles = $user->roles()->pluck('name'); // Returns a collection
 ```
 
-The `HasRoles` trait also adds a `role` scope to your models to scope the query to certain roles or permissions:
+The `HasRoles` also adds a scope to your models to scope the query to certain roles:
 
 ```php
-$users = User::role('writer')->get(); // Returns only users with the role 'writer'
+$users = User::role('writer')->get(); // Only returns users with the role 'writer'
 ```
+The scope can accept a string, a `Spatie\Permission\Models\Role` object or an `\Illuminate\Support\Collection` object.
 
-The `role` scope can accept a string, a `\MarkVilludo\Permission\Models\Role` object or an `\Illuminate\Support\Collection` object.
-
-The same trait also adds a scope to only get users that have a certain permission.
-
-```php
-$users = User::permission('edit articles')->get(); // Returns only users with the permission 'edit articles' (inherited or directly)
-```
-
-The scope can accept a string, a `\MarkVilludo\Permission\Models\Permission` object or an `\Illuminate\Support\Collection` object.
-
-### Using "direct" permissions (see below to use both roles and permissions)
-
-A permission can be given to any user:
-
+### Using permissions
+A permission can be given to a user:
 ```php
 $user->givePermissionTo('edit articles');
 
@@ -366,475 +228,225 @@ $user->givePermissionTo(['edit articles', 'delete articles']);
 ```
 
 A permission can be revoked from a user:
-
 ```php
 $user->revokePermissionTo('edit articles');
 ```
 
-Or revoke & add new permissions in one go:
-
-```php
-$user->syncPermissions(['edit articles', 'delete articles']);
-```
-
 You can test if a user has a permission:
-
 ```php
 $user->hasPermissionTo('edit articles');
 ```
 
-...or if a user has multiple permissions:
-
-```php
-$user->hasAnyPermission(['edit articles', 'publish articles', 'unpublish articles']);
-```
-
-Saved permissions will be registered with the `Illuminate\Auth\Access\Gate` class for the default guard. So you can
+Saved permissions will be registered with the `Illuminate\Auth\Access\Gate` class. So you can
 test if a user has a permission with Laravel's default `can` function:
-
 ```php
 $user->can('edit articles');
 ```
 
-### Using permissions via roles
-
-A role can be assigned to any user:
-
+### Using roles and permissions
+A role can be assigned to a user:
 ```php
 $user->assignRole('writer');
 
 // You can also assign multiple roles at once
 $user->assignRole('writer', 'admin');
-// or as an array
 $user->assignRole(['writer', 'admin']);
 ```
 
 A role can be removed from a user:
-
 ```php
 $user->removeRole('writer');
 ```
 
 Roles can also be synced:
-
 ```php
-// All current roles will be removed from the user and replaced by the array given
+// All current roles will be removed from the user and replace by the array given
 $user->syncRoles(['writer', 'admin']);
 ```
 
 You can determine if a user has a certain role:
-
 ```php
 $user->hasRole('writer');
 ```
 
 You can also determine if a user has any of a given list of roles:
-
 ```php
 $user->hasAnyRole(Role::all());
 ```
 
 You can also determine if a user has all of a given list of roles:
-
 ```php
 $user->hasAllRoles(Role::all());
 ```
 
 The `assignRole`, `hasRole`, `hasAnyRole`, `hasAllRoles`  and `removeRole` functions can accept a
- string, a `\MarkVilludo\Permission\Models\Role` object or an `\Illuminate\Support\Collection` object.
+ string, a `Spatie\Permission\Models\Role` object or an `\Illuminate\Support\Collection` object.
 
 A permission can be given to a role:
-
 ```php
 $role->givePermissionTo('edit articles');
 ```
 
 You can determine if a role has a certain permission:
-
 ```php
 $role->hasPermissionTo('edit articles');
 ```
 
 A permission can be revoked from a role:
-
 ```php
 $role->revokePermissionTo('edit articles');
 ```
 
-The `givePermissionTo` and `revokePermissionTo` functions can accept a
-string or a `MarkVilludo\Permission\Models\Permission` object.
+The `givePermissionTo` and `revokePermissionTo` functions can accept a 
+string or a `Spatie\Permission\Models\Permission` object.
 
-
-Permissions are inherited from roles automatically. 
-Additionally, individual permissions can be assigned to the user too. 
-For instance:
-
+Saved permission and roles are also registered with the `Illuminate\Auth\Access\Gate` class.
 ```php
-$role = Role::findByName('writer');
-$role->givePermissionTo('edit articles');
+$user->can('edit articles');
+```
 
+All permissions of roles that user is assigned to are inherited to the 
+user automatically. In addition to these permissions particular permission can be assigned to the user too. For instance: 
+```php
+$role->givePermissionTo('edit articles');
 $user->assignRole('writer');
 
 $user->givePermissionTo('delete articles');
 ```
+In above example a role is given permission to edit articles and this role is assigned to a user. Now user can edit articles and additionaly delete articles. The permission of 'delete articles' is his direct permission because it is assigned directly to him. When we call `$user->hasDirectPermission('delete articles')` it returns `true` and `false` for `$user->hasDirectPermission('edit articles')`. 
 
-In the above example, a role is given permission to edit articles and this role is assigned to a user. 
-Now the user can edit articles and additionally delete articles. The permission of 'delete articles' is the user's direct permission because it is assigned directly to them.
-When we call `$user->hasDirectPermission('delete articles')` it returns `true`, 
-but `false` for `$user->hasDirectPermission('edit articles')`.
+This method is useful if one has a form for setting permissions for roles and users in his application and want to restrict to change inherited permissions of roles of user, i.e. allowing to change only direct permissions of user.
 
-This method is useful if one builds a form for setting permissions for roles and users in an application and wants to restrict or change inherited permissions of roles of the user, i.e. allowing to change only direct permissions of the user.
-
-You can list all of these permissions:
-
+You can list all of theses permissions:
 ```php
 // Direct permissions
 $user->getDirectPermissions() // Or $user->permissions;
 
-// Permissions inherited from the user's roles
+// Permissions inherited from user's roles
 $user->getPermissionsViaRoles();
 
-// All permissions which apply on the user (inherited and direct)
+// All permissions which apply on the user
 $user->getAllPermissions();
 ```
 
-All these responses are collections of `MarkVilludo\Permission\Models\Permission` objects.
+All theses responses are collections of `Spatie\Permission\Models\Permission` objects.
 
-If we follow the previous example, the first response will be a collection with the `delete article` permission and 
-the second will be a collection with the `edit article` permission and the third will contain both.
+If we follow the previous example, the first response will be a collection with the 'delete article' permission, the second will be a collection with the 'edit article' permission and the third will contain both.
 
 ### Using Blade directives
-This package also adds Blade directives to verify whether the currently logged in user has all or any of a given list of roles. 
+This package also adds Blade directives to verify whether the
+currently logged in user has all or any of a given list of roles.
 
-Optionally you can pass in the `guard` that the check will be performed on as a second argument.
-
-#### Blade and Roles
-Test for a specific role:
 ```php
 @role('writer')
-    I am a writer!
+    I'm a writer!
 @else
-    I am not a writer...
+    I'm not a writer...
 @endrole
 ```
-is the same as
+
 ```php
 @hasrole('writer')
-    I am a writer!
+    I'm a writer!
 @else
-    I am not a writer...
+    I'm not a writer...
 @endhasrole
 ```
 
-Test for any role in a list:
 ```php
-@hasanyrole($collectionOfRoles)
+@hasanyrole(Role::all())
     I have one or more of these roles!
 @else
     I have none of these roles...
 @endhasanyrole
-// or
-@hasanyrole('writer|admin')
-    I am either a writer or an admin or both!
-@else
-    I have none of these roles...
-@endhasanyrole
 ```
-Test for all roles:
 
 ```php
-@hasallroles($collectionOfRoles)
+@hasallroles(Role::all())
     I have all of these roles!
 @else
-    I do not have all of these roles...
-@endhasallroles
-// or
-@hasallroles('writer|admin')
-    I am both a writer and an admin!
-@else
-    I do not have all of these roles...
+    I don't have all of these roles...
 @endhasallroles
 ```
 
-#### Blade and Permissions
-This package doesn't add any permission-specific Blade directives. Instead, use Laravel's native `@can` directive to check if a user has a certain permission.
-
-```php
-@can('edit articles')
-  //
-@endcan
-```
-or
-```php
-@if(auth()->user()->can('edit articles') && $some_other_condition)
-  //
-@endif
-```
-
-## Using multiple guards
-
-When using the default Laravel auth configuration all of the above methods will work out of the box, no extra configuration required.
-
-However, when using multiple guards they will act like namespaces for your permissions and roles. Meaning every guard has its own set of permissions and roles that can be assigned to their user model.
-
-### Using permissions and roles with multiple guards
-
-By default the default guard (`config('auth.defaults.guard')`) will be used as the guard for new permissions and roles. When creating permissions and roles for specific guards you'll have to specify their `guard_name` on the model:
-
-```php
-// Create a superadmin role for the admin users
-$role = Role::create(['guard_name' => 'admin', 'name' => 'superadmin']);
-
-// Define a `publish articles` permission for the admin users belonging to the admin guard
-$permission = Permission::create(['guard_name' => 'admin', 'name' => 'publish articles']);
-
-// Define a *different* `publish articles` permission for the regular users belonging to the web guard
-$permission = Permission::create(['guard_name' => 'web', 'name' => 'publish articles']);
-```
-
-To check if a user has permission for a specific guard:
-
-```php
-$user->hasPermissionTo('publish articles', 'admin');
-```
-
-### Assigning permissions and roles to guard users
-
-You can use the same methods to assign permissions and roles to users as described above in [using permissions via roles](#using-permissions-via-roles). Just make sure the `guard_name` on the permission or role matches the guard of the user, otherwise a `GuardDoesNotMatch` exception will be thrown.
-
-### Using blade directives with multiple guards
-
-You can use all of the blade directives listed in [using blade directives](#using-blade-directives) by passing in the guard you wish to use as the second argument to the directive:
-
-```php
-@role('super-admin', 'admin')
-    I am a super-admin!
-@else
-    I am not a super-admin...
-@endrole
-```
+You can use Laravel's native `@can` directive to check if a user has a certain permission.
 
 ## Using a middleware
+The package doesn't contain a middleware to check permissions but it's very trivial to add this yourself:
+``` bash
+$ php artisan make:middleware RoleMiddleware
+```
 
-This package comes with `RoleMiddleware` and `PermissionMiddleware` middleware. You can add them inside your `app/Http/Kernel.php` file.
+This will create a `app/Http/Middleware/RoleMiddleware.php` file for you, where you can handle your role and permissions check:
+```php
+use Auth;
 
+// ...
+
+public function handle($request, Closure $next, $role, $permission)
+{
+    if (Auth::guest()) {
+        return redirect($urlOfYourLoginPage);
+    }
+
+    if (! $request->user()->hasRole($role)) {
+       abort(403);
+    }
+    
+    if (! $request->user()->can($permission)) {
+       abort(403);
+    }
+
+    return $next($request);
+}
+```
+
+Don't forget to add the route middleware to `app/Http/Kernel.php` file:
 ```php
 protected $routeMiddleware = [
     // ...
-    'role' => \MarkVilludo\Permission\Middlewares\RoleMiddleware::class,
-    'permission' => \MarkVilludo\Permission\Middlewares\PermissionMiddleware::class,
+    'role' => \App\Http\Middleware\RoleMiddleware::class,
+    // ...
 ];
 ```
 
-Then you can protect your routes using middleware rules:
-
+Now you can protect your routes using the middleware you just set up:
 ```php
-Route::group(['middleware' => ['role:super-admin']], function () {
-    //
-});
-
-Route::group(['middleware' => ['permission:publish articles']], function () {
-    //
-});
-
-Route::group(['middleware' => ['role:super-admin','permission:publish articles']], function () {
+Route::group(['middleware' => ['role:admin,access_backend']], function () {
     //
 });
 ```
-
-Alternatively, you can separate multiple roles or permission with a `|` (pipe) character:
-
-```php
-Route::group(['middleware' => ['role:super-admin|writer']], function () {
-    //
-});
-
-Route::group(['middleware' => ['permission:publish articles|edit articles']], function () {
-    //
-});
-```
-
-You can protect your controllers similarly, by setting desired middleware in the constructor:
-
-```php
-public function __construct()
-{
-    $this->middleware(['role:super-admin','permission:publish articles|edit articles']);
-}
-```
-
-### Catching role and permission failures
-If you want to override the default `403` response, you can catch the `UnauthorizedException` using your app's exception handler:
-
-```php
-public function render($request, Exception $exception)
-{
-    if ($exception instanceof \MarkVilludo\Permission\Exceptions\UnauthorizedException) {
-        // Code here ...
-    }
-
-    return parent::render($request, $exception);
-}
-
-```
-
-## Using artisan commands
-
-You can create a role or permission from a console with artisan commands.
-
-```bash
-php artisan permission:create-role writer
-```
-
-```bash
-php artisan permission:create-permission "edit articles"
-```
-
-When creating permissions and roles for specific guards you can specify the guard names as a second argument:
-
-```bash
-php artisan permission:create-role writer web
-```
-
-```bash
-php artisan permission:create-permission "edit articles" web
-```
-
-## Unit Testing
-
-In your application's tests, if you are not seeding roles and permissions as part of your test `setUp()` then you may run into a chicken/egg situation where roles and permissions aren't registered with the gate (because your tests create them after that gate registration is done). Working around this is simple: In your tests simply add a `setUp()` instruction to re-register the permissions, like this:
-
-```php
-    public function setUp()
-    {
-        // first include all the normal setUp operations
-        parent::setUp();
-
-        // now re-register all the roles and permissions
-        $this->app->make(\MarkVilludo\Permission\PermissionRegistrar::class)->registerPermissions();
-    }
-```
-
-## Database Seeding
-
-Two notes about Database Seeding:
-
-1. It is best to flush the `markvilludo.permission.cache` before seeding, to avoid cache conflict errors. This can be done from an Artisan command (see Troubleshooting: Cache section, later) or directly in a seeder class (see example below).
-
-2. Here's a sample seeder, which clears the cache, creates permissions and then assigns permissions to roles:
-
-	```php
-	use Illuminate\Database\Seeder;
-	use MarkVilludo\Permission\Models\Role;
-	use MarkVilludo\Permission\Models\Permission;
-
-	class RolesAndPermissionsSeeder extends Seeder
-	{
-	    public function run()
-    	{
-        	// Reset cached roles and permissions
-	        app()['cache']->forget('markvilludo.permission.cache');
-
-	        // create permissions
-	        Permission::create(['name' => 'edit articles']);
-	        Permission::create(['name' => 'delete articles']);
-	        Permission::create(['name' => 'publish articles']);
-	        Permission::create(['name' => 'unpublish articles']);
-
-	        // create roles and assign existing permissions
-	        $role = Role::create(['name' => 'writer']);
-	        $role->givePermissionTo('edit articles');
-
-	        $role = Role::create(['name' => 'admin']);
-            $role->givePermissionTo(['publish articles', 'unpublish articles']);
-	    }
-	}
-
-	```
 
 ## Extending
 
-If you need to EXTEND the existing `Role` or `Permission` models note that:
+If you need to extend or replace the existing `Role` or `Permission` models you just need to 
+keep the following things in mind:
 
-- Your `Role` model needs to extend the `MarkVilludo\Permission\Models\Role` model
-- Your `Permission` model needs to extend the `MarkVilludo\Permission\Models\Permission` model
+- Your `Role` model needs to implement the `Spatie\Permission\Contracts\Role` contract
+- Your `Permission` model needs to implement the `Spatie\Permission\Contracts\Permission` contract
+- You must publish the configuration with this command:
+  ```bash
+  $ php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="config"
+  ```
+  And update the `models.role` and `models.permission` values
 
-If you need to REPLACE the existing `Role` or `Permission` models you need to keep the
-following things in mind:
+## Change log
 
-- Your `Role` model needs to implement the `MarkVilludo\Permission\Contracts\Role` contract
-- Your `Permission` model needs to implement the `MarkVilludo\Permission\Contracts\Permission` contract
+Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
-In BOTH cases, whether extending or replacing, you will need to specify your new models in the configuration. To do this you must update the `models.role` and `models.permission` values in the configuration file after publishing the configuration with this command:
-
-```bash
-php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="config"
-```
- 
-
-## Cache
-
-Role and Permission data are cached to speed up performance.
-
-When you use the supplied methods for manipulating roles and permissions, the cache is automatically reset for you:
-
-```php
-$user->assignRole('writer');
-$user->removeRole('writer');
-$user->syncRoles(params);
-$role->givePermissionTo('edit articles');
-$role->revokePermissionTo('edit articles');
-$role->syncPermissions(params);
-$permission->assignRole('writer');
-$permission->removeRole('writer');
-$permission->syncRoles(params);
-```
-
-HOWEVER, if you manipulate permission/role data directly in the database instead of calling the supplied methods, then you will not see the changes reflected in the application unless you manually reset the cache.
-
-### Manual cache reset
-To manually reset the cache for this package, run:
-```bash
-php artisan cache:forget markvilludo.permission.cache
-```
-
-### Cache Identifier
-
-TIP: If you are leveraging a caching service such as `redis` or `memcached` and there are other sites 
-running on your server, you could run into cache clashes. It is prudent to set your own cache `prefix` 
-in `/config/cache.php` to something unique for each application. This will prevent other applications 
-from accidentally using/changing your cached data.
-
-
-## Need a UI?
-
-The package doesn't come with any screens out of the box, you should build that yourself. To get started check out [this extensive tutorial](https://scotch.io/tutorials/user-authorization-in-laravel-54-with-spatie-laravel-permission) by [Caleb Oki](http://www.caleboki.com/).
-
-### Testing
+## Testing
 
 ``` bash
 composer test
 ```
 
-### Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
-
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-### Security
+## Security
 
-If you discover any security-related issues, please email [freek@markvilludo.be](mailto:freek@markvilludo.be) instead of using the issue tracker.
-
-## Postcardware
-
-You're free to use this package, but if it makes it to your production environment we highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using.
-
-Our address is: Spatie, Samberstraat 69D, 2060 Antwerp, Belgium.
-
-We publish all received postcards [on our company website](https://markvilludo.be/en/opensource/postcards).
+If you discover any security related issues, please email [freek@spatie.be](mailto:freek@spatie.be) instead of using the issue tracker.
 
 ## Credits
 
@@ -842,168 +454,19 @@ We publish all received postcards [on our company website](https://markvilludo.b
 - [All Contributors](../../contributors)
 
 This package is heavily based on [Jeffrey Way](https://twitter.com/jeffrey_way)'s awesome [Laracasts](https://laracasts.com) lessons
-on [permissions and roles](https://laracasts.com/series/whats-new-in-laravel-5-1/episodes/16). His original code
+on [roles and permissions](https://laracasts.com/series/whats-new-in-laravel-5-1/episodes/16). His original code
 can be found [in this repo on GitHub](https://github.com/laracasts/laravel-5-roles-and-permissions-demo).
-
-Special thanks to [Alex Vanderbist](https://github.com/AlexVanderbist) who greatly helped with `v2`, and to [Chris Brown](https://github.com/drbyte) for his longtime support  helping us maintain the package.
-
-## Resources
-
-- [How to create a UI for managing the permissions and roles](http://www.qcode.in/easy-roles-and-permissions-in-laravel-5-4/)
 
 ## Alternatives
 
-[Povilas Korop](https://twitter.com/@povilaskorop) did an excellent job listing the alternatives [in an article on Laravel News](https://laravel-news.com/two-best-roles-permissions-packages). In that same article, he compares laravel-permission to [Joseph Silber](https://github.com/JosephSilber)'s [Bouncer]((https://github.com/JosephSilber/bouncer)), which in our book is also an excellent package.
+- [JosephSilber/bouncer](https://github.com/JosephSilber/bouncer)
+- [BeatSwitch/lock-laravel](https://github.com/BeatSwitch/lock-laravel)
+- [Zizaco/entrust](https://github.com/Zizaco/entrust)
+- [bican/roles](https://github.com/romanbican/roles)
 
-## Support us
+## About Spatie
+Spatie is webdesign agency in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
-markanthony.villudo@gmail.com
-markanthony.villudo@synergy88digital.com
-
-Does your business depend on our contributions? Reach out and support us on [Patreon](https://www.patreon.com/spatie). 
-All pledges will be dedicated to allocating workforce on maintenance and new awesome stuff.
-
-##Specified to long
-include default string length in AppServiceProvider
-		
-   use Illuminate\Support\Facades\Schema;
-
-    public function boot()
-   {
-    Schema::defaultStringLength(191);
-   }
-
-## Additional setup 
-  // We include also laravel passport in this package therefore you need to add this additional stuff.
-  
-  //Add this to user model to work used permission per role or vise versa
-
-    use MarkVilludo\Permission\Traits\HasRoles;
-    use Laravel\Passport\HasApiTokens;
-
-    class User extends Authenticatable
-    {   
-    use HasRoles;
-    use HasApiTokens, Notifiable;
-
-     public function setPasswordAttribute($password)
-        {   
-            $this->attributes['password'] = bcrypt($password);
-        }
-    }
-    
-
-  //update create_permissions_tables.php.sub
-    //update model_has_permissions into
-
-    Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames) {
-            $table->integer('user_id')->unsigned();
-            $table->integer('permission_id')->unsigned();
-            $table->string('model_type');
-
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
-
-            $table->foreign('permission_id')
-                ->references('id')
-                ->on('permissions')
-                ->onDelete('cascade');
-
-            $table->primary(['permission_id', 'user_id', 'model_type']);
-        });
-     //Update model has roles
-        Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use ($tableNames) {
-            $table->integer('role_id')->unsigned();
-            $table->integer('user_id')->unsigned();
-            $table->string('model_type');
-
-            $table->foreign('role_id')
-                ->references('id')
-                ->on($tableNames['roles'])
-                ->onDelete('cascade');
-
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
-
-            $table->primary(['role_id', 'user_id', 'model_type']);
-        });   
-    //were required laravel passport in this package therefore we need to add this following
-    //AuthserviceProvider
-    use Laravel\Passport\Passport;
-
-    public function boot()
-    {
-        $this->registerPolicies();
-
-        Passport::routes();
-        //
-    }
-   //required laravel collective in composer json
-   "laravelcollective/html": "^5.4.0",
-## Routes
-    //include this in routes/web
-    Route::get('/login', function () {
-    return view('laravel-permission::auth.login');
-    });
-
-    Route::get('/register', function () {
-        return view('laravel-permission::auth.register');
-    });
-    Route::get('/home', function () {
-        return view('index');
-    });
-    Route::get('/logout', function () {
-        Auth::logout();
-        return view('laravel-permission::auth.login');
-    });
- ## Works also on Policies
-    //create policy 
-    php artisan make:policy RolePermissionsPolicy
-    <?php
-
-namespace App\Policies;
-
-use App\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
-use MarkVilludo\Permission\Models\Role;
-use MarkVilludo\Permission\Models\Permission;
-
-class RolePermissionsPolicy
-{
-    use HandlesAuthorization;
-
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-    public function index(User $user, $permission){
-        if (auth()->user()->hasPermissionTo($permission)) {
-           return true;
-        } else {
-            return false;
-        }
-    }
-}
-//Register policy in AuthServiceProvider
-    use App\Policies\RolePermissionsPolicy;
-    
-    public function boot()
-    {
-        $this->registerPolicies();
-
-        Gate::define('check-role-permission', 'App\Policies\RolePermissionsPolicy@index');
-    }
-    
-    
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.

@@ -1,18 +1,11 @@
 <?php
 
-namespace MarkVilludo\Permission\Models;
+namespace Spatie\Permission\Models;
 
-use MarkVilludo\Permission\Guard;
-use Illuminate\Support\Collection;
-use MarkVilludo\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
-use MarkVilludo\Permission\PermissionRegistrar;
-use MarkVilludo\Permission\Traits\RefreshesPermissionCache;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use MarkVilludo\Permission\Exceptions\PermissionDoesNotExist;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use MarkVilludo\Permission\Exceptions\PermissionAlreadyExists;
-use MarkVilludo\Permission\Contracts\Permission as PermissionContract;
+use Spatie\Permission\Traits\RefreshesPermissionCache;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
+use Spatie\Permission\Contracts\Permission as PermissionContract;
 
 class Permission extends Model implements PermissionContract
 {
@@ -34,7 +27,7 @@ class Permission extends Model implements PermissionContract
     {
         parent::__construct($attributes);
 
-        $this->setTable(config('permission.table_names.permissions'));
+        $this->setTable(config('laravel-permission.table_names.permissions'));
     }
 
     /**
@@ -45,8 +38,8 @@ class Permission extends Model implements PermissionContract
     public function roles()
     {
         return $this->belongsToMany(
-            config('permission.models.role'),
-            config('permission.table_names.role_has_permissions')
+            config('laravel-permission.models.role'),
+            config('laravel-permission.table_names.role_has_permissions')
         );
     }
 
@@ -59,7 +52,7 @@ class Permission extends Model implements PermissionContract
     {
         return $this->belongsToMany(
             config('auth.model') ?: config('auth.providers.users.model'),
-            config('permission.table_names.user_has_permissions')
+            config('laravel-permission.table_names.user_has_permissions')
         );
     }
 

@@ -1,13 +1,12 @@
 <?php
 
-namespace MarkVilludo\Permission;
+namespace Spatie\Permission;
 
-use Illuminate\Support\Collection;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Cache\Repository;
-use MarkVilludo\Permission\Contracts\Permission;
+use Spatie\Permission\Contracts\Permission;
 use Illuminate\Contracts\Auth\Authenticatable;
-use MarkVilludo\Permission\Exceptions\PermissionDoesNotExist;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 
 class PermissionRegistrar
 {
@@ -18,8 +17,12 @@ class PermissionRegistrar
     protected $cache;
 
     /** @var string */
-    protected $cacheKey = 'markvilludo.permission.cache';
+    protected $cacheKey = 'spatie.permission.cache';
 
+    /**
+     * @param Gate $gate
+     * @param Repository $cache
+     */
     public function __construct(Gate $gate, Repository $cache)
     {
         $this->gate = $gate;
@@ -46,13 +49,14 @@ class PermissionRegistrar
         return true;
     }
 
-      /**
+    /**
      *  Forget the cached permissions.
      */
     public function forgetCachedPermissions()
     {
         $this->cache->forget($this->cacheKey);
     }
+
     /**
      * Get the current permissions.
      *

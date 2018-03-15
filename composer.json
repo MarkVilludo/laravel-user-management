@@ -1,8 +1,8 @@
 {
     "name": "mark-villudo/laravel-user-management",
-    "description": "Permission handling for Laravel 5.4 and up",
+    "description": "Permission handling for Laravel 5.1 and up",
     "keywords": [
-        "markvilludo",
+        "spatie",
         "laravel",
         "permission",
         "acl",
@@ -18,27 +18,22 @@
         }
     ],
     "require": {
-        "php" : ">=7.0",
-        "illuminate/auth": "~5.3.0|~5.4.0|~5.5.0|~5.6.0",
-        "illuminate/container": "~5.3.0|~5.4.0|~5.5.0|~5.6.0",
-        "illuminate/contracts": "~5.3.0|~5.4.0|~5.5.0|~5.6.0",
-        "illuminate/database": "~5.4.0|~5.5.0|~5.6.0"
+        "php" : ">=5.6.0",
+        "laravel/framework": "~5.1.11|~5.2.0|~5.3.0|~5.4.0|~5.5.0|~5.6.0",
+        "illuminate/contracts": "~5.1.0|~5.2.0|~5.3.0|~5.4.0|~5.5.0|~5.6.0"
     },
     "require-dev": {
-        "orchestra/testbench": "~3.3.0|~3.4.2|^3.5.0",
-        "phpunit/phpunit" : "^5.7|6.2|^7.0"
+        "orchestra/testbench": "^3.3.0",
+        "phpunit/phpunit" : "^5.7.8|~6.0|^7.0"
     },
     "autoload": {
         "psr-4": {
-            "MarkVilludo\\Permission\\": "src"
-        },
-        "files": [
-            "src/helpers.php"
-        ]
+            "Spatie\\Permission\\": "src"
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "MarkVilludo\\Permission\\Test\\": "tests"
+            "Spatie\\Permission\\Test\\": "tests"
         }
     },
     "scripts": {
@@ -50,8 +45,9 @@
     "extra": {
         "laravel": {
             "providers": [
-                "MarkVilludo\\Permission\\PermissionServiceProvider"
+                "Spatie\\Permission\\PermissionServiceProvider"
             ]
         }
     }
 }
+

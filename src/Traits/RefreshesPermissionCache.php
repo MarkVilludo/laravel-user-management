@@ -1,8 +1,8 @@
 <?php
 
-namespace MarkVilludo\Permission\Traits;
+namespace Spatie\Permission\Traits;
 
-use MarkVilludo\Permission\PermissionRegistrar;
+use Spatie\Permission\PermissionRegistrar;
 
 trait RefreshesPermissionCache
 {

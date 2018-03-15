@@ -12,8 +12,8 @@ class CreatePermissionTables extends Migration
      */
     public function up()
     {
-        $tableNames = config('permission.table_names');
-        $foreignKeys = config('permission.foreign_keys');
+        $tableNames = config('laravel-permission.table_names');
+        $foreignKeys = config('laravel-permission.foreign_keys');
 
         Schema::create($tableNames['roles'], function (Blueprint $table) {
             $table->increments('id');
@@ -87,7 +87,7 @@ class CreatePermissionTables extends Migration
      */
     public function down()
     {
-        $tableNames = config('permission.table_names');
+        $tableNames = config('laravel-permission.table_names');
 
         Schema::drop($tableNames['role_has_permissions']);
         Schema::drop($tableNames['user_has_roles']);

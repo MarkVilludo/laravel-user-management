@@ -1,44 +1,31 @@
 <?php
 
-namespace MarkVilludo\Permission;
+namespace Spatie\Permission;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
-use MarkVilludo\Permission\Contracts\Role as RoleContract;
-use MarkVilludo\Permission\Contracts\Permission as PermissionContract;
+use Spatie\Permission\Contracts\Role as RoleContract;
+use Spatie\Permission\Contracts\Permission as PermissionContract;
 
 class PermissionServiceProvider extends ServiceProvider
 {
+    /**
+     * @param \Spatie\Permission\PermissionRegistrar $permissionLoader
+     */
     public function boot(PermissionRegistrar $permissionLoader)
-    {   
-         $this->loadViewsFrom(__DIR__.'/../views', 'laravel-permission');
-
+    {
         $this->publishes([
-           __DIR__.'/../views' => resource_path(''),
-        ],'views');
-        if (isNotLumen()) {
+            __DIR__.'/../resources/config/laravel-permission.php' => $this->app->configPath().'/'.'laravel-permission.php',
+        ], 'config');
 
-            //publish all views from vendor to resources
+        if (! class_exists('CreatePermissionTables')) {
+            // Publish the migration
+            $timestamp = date('Y_m_d_His', time());
             $this->publishes([
-                __DIR__.'/../config/permission.php' => config_path('permission.php'),
-            ], 'config');
-
-            if (! class_exists('CreatePermissionTables')) {
-                $timestamp = date('Y_m_d_His', time());
-
-                $this->publishes([
-                    __DIR__.'/../database/migrations/create_permission_tables.php.stub' => $this->app->databasePath()."/migrations/{$timestamp}_create_permission_tables.php",
-                ], 'migrations');
-            }
+                __DIR__.'/../resources/migrations/create_permission_tables.php.stub' => $this->app->databasePath().'/migrations/'.$timestamp.'_create_permission_tables.php',
+            ], 'migrations');
         }
 
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                Commands\CreateRole::class,
-                Commands\CreatePermission::class,
-            ]);
-        }
-    
         $this->registerModelBindings();
 
         $permissionLoader->registerPermissions();
@@ -46,19 +33,17 @@ class PermissionServiceProvider extends ServiceProvider
 
     public function register()
     {
-        if (isNotLumen()) {
-            $this->mergeConfigFrom(
-                __DIR__.'/../config/permission.php',
-                'permission'
-            );
-        }
-        $this->registerRoutes();
+        $this->mergeConfigFrom(
+            __DIR__.'/../resources/config/laravel-permission.php',
+            'laravel-permission'
+        );
+
         $this->registerBladeExtensions();
     }
 
     protected function registerModelBindings()
     {
-        $config = $this->app->config['permission.models'];
+        $config = $this->app->config['laravel-permission.models'];
 
         $this->app->bind(PermissionContract::class, $config['permission']);
         $this->app->bind(RoleContract::class, $config['role']);
@@ -96,9 +81,4 @@ class PermissionServiceProvider extends ServiceProvider
             });
         });
     }
-    protected function registerRoutes()
-    {
-        include __DIR__.'/routes/api.php';
-        include __DIR__.'/routes/web.php';
-    }  
 }

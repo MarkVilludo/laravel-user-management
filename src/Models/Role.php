@@ -1,17 +1,12 @@
 <?php
 
-namespace MarkVilludo\Permission\Models;
+namespace Spatie\Permission\Models;
 
-use MarkVilludo\Permission\Guard;
 use Illuminate\Database\Eloquent\Model;
-use MarkVilludo\Permission\Traits\HasPermissions;
-use MarkVilludo\Permission\Exceptions\RoleDoesNotExist;
-use MarkVilludo\Permission\Exceptions\GuardDoesNotMatch;
-use MarkVilludo\Permission\Exceptions\RoleAlreadyExists;
-use MarkVilludo\Permission\Contracts\Role as RoleContract;
-use MarkVilludo\Permission\Traits\RefreshesPermissionCache;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Permission\Traits\HasPermissions;
+use Spatie\Permission\Exceptions\RoleDoesNotExist;
+use Spatie\Permission\Contracts\Role as RoleContract;
+use Spatie\Permission\Traits\RefreshesPermissionCache;
 
 class Role extends Model implements RoleContract
 {
@@ -34,7 +29,7 @@ class Role extends Model implements RoleContract
     {
         parent::__construct($attributes);
 
-        $this->setTable(config('permission.table_names.roles'));
+        $this->setTable(config('laravel-permission.table_names.roles'));
     }
 
     /**
@@ -45,8 +40,8 @@ class Role extends Model implements RoleContract
     public function permissions()
     {
         return $this->belongsToMany(
-            config('permission.models.permission'),
-            config('permission.table_names.role_has_permissions')
+            config('laravel-permission.models.permission'),
+            config('laravel-permission.table_names.role_has_permissions')
         );
     }
 
@@ -59,7 +54,7 @@ class Role extends Model implements RoleContract
     {
         return $this->belongsToMany(
             config('auth.model') ?: config('auth.providers.users.model'),
-            config('permission.table_names.user_has_roles')
+            config('laravel-permission.table_names.user_has_roles')
         );
     }
 
@@ -98,3 +93,4 @@ class Role extends Model implements RoleContract
 
         return $this->permissions->contains('id', $permission->id);
     }
+}

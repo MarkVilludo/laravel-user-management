@@ -1,13 +1,9 @@
 <?php
 
-namespace MarkVilludo\Permission\Exceptions;
+namespace Spatie\Permission\Exceptions;
 
-use InvalidArgumentException;
+use Exception;
 
-class PermissionDoesNotExist extends InvalidArgumentException
+class PermissionDoesNotExist extends Exception
 {
-    public static function create(string $permissionName)
-    {
-        return new static("There is no permission named `{$permissionName}`");
-    }
 }

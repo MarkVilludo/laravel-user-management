@@ -1,8 +1,6 @@
 <?php
 
-namespace MarkVilludo\Permission\Contracts;
-
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+namespace Spatie\Permission\Contracts;
 
 interface Permission
 {
@@ -14,12 +12,18 @@ interface Permission
     public function roles();
 
     /**
+     * A permission can be applied to users.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users();
+
+    /**
      * Find a permission by its name.
      *
      * @param string $name
-     * @param string|null $guardName
      *
-     * @throws \MarkVilludo\Permission\Exceptions\PermissionDoesNotExist
+     * @throws \Spatie\Permission\Exceptions\PermissionDoesNotExist
      *
      * @return Permission
      */

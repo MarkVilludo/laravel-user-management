@@ -1,18 +1,9 @@
 <?php
 
-namespace MarkVilludo\Permission\Exceptions;
+namespace Spatie\Permission\Exceptions;
 
-use InvalidArgumentException;
+use Exception;
 
-class RoleDoesNotExist extends InvalidArgumentException
+class RoleDoesNotExist extends Exception
 {
-    public static function named(string $roleName)
-    {
-        return new static("There is no role named `{$roleName}`.");
-    }
-
-    public static function withId(int $roleId)
-    {
-        return new static("There is no role with id `{$roleId}`.");
-    }
 }
