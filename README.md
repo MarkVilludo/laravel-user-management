@@ -51,13 +51,13 @@ Now add the service provider in `config/app.php` file:
 ```php
 'providers' => [
     // ...
-    Spatie\Permission\PermissionServiceProvider::class,
+    MarkVilludo\Permission\PermissionServiceProvider::class,
 ];
 ```
 
 You can publish the migration with:
 ```bash
-php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="migrations"
+php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="migrations"
 ```
 
 The package assumes that your users table name is called "users". If this is not the case
@@ -72,7 +72,7 @@ $ php artisan migrate
 
 You can publish the config-file with:
 ```bash
-php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="config"
+php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="config"
 ```
 
 This is the contents of the published `config/laravel-permission.php` config file:
@@ -87,10 +87,10 @@ return [
          * is often just the "Permission" model but you may use whatever you like.
          *
          * The model you want to use as a Permission model needs to implement the
-         * `Spatie\Permission\Contracts\Permission` contract.
+         * `MarkVilludo\Permission\Contracts\Permission` contract.
          */
 
-        'permission' => Spatie\Permission\Models\Permission::class,
+        'permission' => MarkVilludo\Permission\Models\Permission::class,
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -98,10 +98,10 @@ return [
          * is often just the "Role" model but you may use whatever you like.
          *
          * The model you want to use as a Role model needs to implement the
-         * `Spatie\Permission\Contracts\Role` contract.
+         * `MarkVilludo\Permission\Contracts\Role` contract.
          */
 
-        'role' => Spatie\Permission\Models\Role::class,
+        'role' => MarkVilludo\Permission\Models\Role::class,
 
     ],
 
@@ -177,10 +177,10 @@ return [
 
 ## Usage
 
-First add the `Spatie\Permission\Traits\HasRoles` trait to your User model:
+First add the `MarkVilludo\Permission\Traits\HasRoles` trait to your User model:
 ```php
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Traits\HasRoles;
+use MarkVilludo\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -194,8 +194,8 @@ This package allows for users to be associated with roles. Permissions can be as
 A `Role` and a `Permission` are regular Eloquent models. They can have a name and can be created like this:
 
 ```php
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use MarkVilludo\Permission\Models\Role;
+use MarkVilludo\Permission\Models\Permission;
 
 $role = Role::create(['name' => 'writer']);
 $permission = Permission::create(['name' => 'edit articles']);
@@ -213,7 +213,7 @@ The `HasRoles` also adds a scope to your models to scope the query to certain ro
 ```php
 $users = User::role('writer')->get(); // Only returns users with the role 'writer'
 ```
-The scope can accept a string, a `Spatie\Permission\Models\Role` object or an `\Illuminate\Support\Collection` object.
+The scope can accept a string, a `MarkVilludo\Permission\Models\Role` object or an `\Illuminate\Support\Collection` object.
 
 ### Using permissions
 A permission can be given to a user:
@@ -280,7 +280,7 @@ $user->hasAllRoles(Role::all());
 ```
 
 The `assignRole`, `hasRole`, `hasAnyRole`, `hasAllRoles`  and `removeRole` functions can accept a
- string, a `Spatie\Permission\Models\Role` object or an `\Illuminate\Support\Collection` object.
+ string, a `MarkVilludo\Permission\Models\Role` object or an `\Illuminate\Support\Collection` object.
 
 A permission can be given to a role:
 ```php
@@ -422,11 +422,11 @@ Route::group(['middleware' => ['role:admin,access_backend']], function () {
 If you need to extend or replace the existing `Role` or `Permission` models you just need to 
 keep the following things in mind:
 
-- Your `Role` model needs to implement the `Spatie\Permission\Contracts\Role` contract
-- Your `Permission` model needs to implement the `Spatie\Permission\Contracts\Permission` contract
+- Your `Role` model needs to implement the `MarkVilludo\Permission\Contracts\Role` contract
+- Your `Permission` model needs to implement the `MarkVilludo\Permission\Contracts\Permission` contract
 - You must publish the configuration with this command:
   ```bash
-  $ php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="config"
+  $ php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="config"
   ```
   And update the `models.role` and `models.permission` values
 
@@ -446,12 +446,13 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Security
 
-If you discover any security related issues, please email [freek@spatie.be](mailto:freek@spatie.be) instead of using the issue tracker.
+If you discover any security related issues, please email [mark.villudo@synergy88digital.com]
 
 ## Credits
-
+-  Spatie
 - [Freek Van der Herten](https://github.com/freekmurze)
 - [All Contributors](../../contributors)
+
 
 This package is heavily based on [Jeffrey Way](https://twitter.com/jeffrey_way)'s awesome [Laracasts](https://laracasts.com) lessons
 on [roles and permissions](https://laracasts.com/series/whats-new-in-laravel-5-1/episodes/16). His original code
@@ -464,8 +465,68 @@ can be found [in this repo on GitHub](https://github.com/laracasts/laravel-5-rol
 - [Zizaco/entrust](https://github.com/Zizaco/entrust)
 - [bican/roles](https://github.com/romanbican/roles)
 
-## About Spatie
-Spatie is webdesign agency in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
+## Additional Features
+## Additional setup (Features) collective Html
+   //required laravel collective in composer json
+   "laravelcollective/html": "^5.4.0",
+## Routes
+    //include this in routes/web
+    Route::get('/login', function () {
+    return view('laravel-permission::auth.login');
+    });
+
+    Route::get('/register', function () {
+        return view('laravel-permission::auth.register');
+    });
+    Route::get('/home', function () {
+        return view('index');
+    });
+    Route::get('/logout', function () {
+        Auth::logout();
+        return view('laravel-permission::auth.login');
+    });
+ ## Works also on Policies
+    //create policy 
+    php artisan make:policy RolePermissionsPolicy
+    <?php
+
+namespace App\Policies;
+
+use App\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
+use MarkVilludo\Permission\Models\Role;
+use MarkVilludo\Permission\Models\Permission;
+
+class RolePermissionsPolicy
+{
+    use HandlesAuthorization;
+
+    /**
+     * Create a new policy instance.
+     *
+     * @return void
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+    public function index(User $user, $permission){
+        if (auth()->user()->hasPermissionTo($permission)) {
+           return true;
+        } else {
+            return false;
+        }
+    }
+}
+//Register policy in AuthServiceProvider
+    use App\Policies\RolePermissionsPolicy;
+    
+    public function boot()
+    {
+        $this->registerPolicies();
+
+        Gate::define('check-role-permission', 'App\Policies\RolePermissionsPolicy@index');
+    }
 
 ## License
 
