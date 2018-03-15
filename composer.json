@@ -1,5 +1,5 @@
 {
-    "name": "mark-villudo/laravel-user-management",
+     "name": "mark-villudo/laravel-user-management",
     "description": "Permission handling for Laravel 5.1 and up",
     "keywords": [
         "spatie",
@@ -8,7 +8,7 @@
         "acl",
         "security"
     ],
-    "homepage": "https://github.com/MarkVilludo/laravel-user-management",
+    "homepage": "https://github.com/spatie/laravel-permission",
     "license": "MIT",
     "authors": [
         {
@@ -50,4 +50,5 @@
         }
     }
 }
+
 
