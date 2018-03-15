@@ -1,9 +1,9 @@
 <?php
 
-namespace Spatie\Permission\Controllers;
+namespace MarkVilludo\Permission\Controllers;
 
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use MarkVilludo\Permission\Models\Permission;
+use MarkVilludo\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Session;

@@ -10,10 +10,10 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('/login', 'Spatie\Permission\Controllers\Api\PassportController@login')->name('login');
-Route::post('/register', 'Spatie\Permission\Controllers\Api\PassportController@register')->name('register');
+Route::post('/login', 'MarkVilludo\Permission\Controllers\Api\PassportController@login')->name('login');
+Route::post('/register', 'MarkVilludo\Permission\Controllers\Api\PassportController@register')->name('register');
 //checkout orders
-Route::post('/checkout','Spatie\Permission\Controllers\Api\ShoppingCartController@checkout');
+Route::post('/checkout','MarkVilludo\Permission\Controllers\Api\ShoppingCartController@checkout');
 
 Route::group(['middleware' => 'auth:api'], function(){
 	//group by v1
@@ -21,36 +21,36 @@ Route::group(['middleware' => 'auth:api'], function(){
 
 		Route::prefix('permissions')->group(function () {
 			//All permissions
-			Route::get('/', 'Spatie\Permission\Controllers\Api\PermissionController@index');
+			Route::get('/', 'MarkVilludo\Permission\Controllers\Api\PermissionController@index');
 			//Create new permission
-			Route::post('/', 'Spatie\Permission\Controllers\Api\PermissionController@store');
+			Route::post('/', 'MarkVilludo\Permission\Controllers\Api\PermissionController@store');
 			//Update permission
-			Route::post('/{id}', 'Spatie\Permission\Controllers\Api\PermissionController@update');
+			Route::post('/{id}', 'MarkVilludo\Permission\Controllers\Api\PermissionController@update');
 			//Delete permission
-			Route::delete('/{id}', 'Spatie\Permission\Controllers\Api\PermissionController@destroy');
+			Route::delete('/{id}', 'MarkVilludo\Permission\Controllers\Api\PermissionController@destroy');
 		});
 		
 		Route::prefix('roles')->group(function () {
 			//All roles
-			Route::get('/', 'Spatie\Permission\Controllers\Api\RoleController@index');
+			Route::get('/', 'MarkVilludo\Permission\Controllers\Api\RoleController@index');
 			//Create new role
-			Route::post('/', 'Spatie\Permission\Controllers\Api\RoleController@store');
+			Route::post('/', 'MarkVilludo\Permission\Controllers\Api\RoleController@store');
 			//Update role
-			Route::post('/{id}', 'Spatie\Permission\Controllers\Api\RoleController@update');
+			Route::post('/{id}', 'MarkVilludo\Permission\Controllers\Api\RoleController@update');
 			//Delete role
-			Route::delete('/{id}', 'Spatie\Permission\Controllers\Api\RoleController@destroy');
+			Route::delete('/{id}', 'MarkVilludo\Permission\Controllers\Api\RoleController@destroy');
 		});
  	 	
 		//Users
 		Route::prefix('users')->group(function () {
 			//user list
-		  	Route::get('/','Spatie\Permission\Controllers\Api\UserController@index');
+		  	Route::get('/','MarkVilludo\Permission\Controllers\Api\UserController@index');
 			//Get user details
-			Route::get('/{id}','Spatie\Permission\Controllers\Api\UserController@show');
+			Route::get('/{id}','MarkVilludo\Permission\Controllers\Api\UserController@show');
 			//create user
-			Route::post('/', 'Spatie\Permission\Controllers\Api\UserController@store');
+			Route::post('/', 'MarkVilludo\Permission\Controllers\Api\UserController@store');
 			//Update user details
-			Route::post('/{id}','Spatie\Permission\Controllers\Api\UserController@update');
+			Route::post('/{id}','MarkVilludo\Permission\Controllers\Api\UserController@update');
 		});
 
 	});

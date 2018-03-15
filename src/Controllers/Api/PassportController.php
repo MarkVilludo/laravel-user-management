@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Permission\Controllers\Api;
+namespace MarkVilludo\Permission\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Permission\Contracts;
+namespace MarkVilludo\Permission\Contracts;
 
 interface Permission
 {
@@ -23,7 +23,7 @@ interface Permission
      *
      * @param string $name
      *
-     * @throws \Spatie\Permission\Exceptions\PermissionDoesNotExist
+     * @throws \MarkVilludo\Permission\Exceptions\PermissionDoesNotExist
      *
      * @return Permission
      */

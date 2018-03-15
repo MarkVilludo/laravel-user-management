@@ -1,12 +1,12 @@
 <?php
 
-namespace Spatie\Permission;
+namespace MarkVilludo\Permission;
 
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Cache\Repository;
-use Spatie\Permission\Contracts\Permission;
+use MarkVilludo\Permission\Contracts\Permission;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Spatie\Permission\Exceptions\PermissionDoesNotExist;
+use MarkVilludo\Permission\Exceptions\PermissionDoesNotExist;
 
 class PermissionRegistrar
 {
@@ -17,7 +17,7 @@ class PermissionRegistrar
     protected $cache;
 
     /** @var string */
-    protected $cacheKey = 'spatie.permission.cache';
+    protected $cacheKey = 'markvilludo.permission.cache';
 
     /**
      * @param Gate $gate

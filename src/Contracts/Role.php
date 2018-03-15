@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Permission\Contracts;
+namespace MarkVilludo\Permission\Contracts;
 
 interface Role
 {
