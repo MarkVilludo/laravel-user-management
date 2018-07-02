@@ -147,7 +147,7 @@ class RoleController extends Controller
 
         $data['role'] = $role;
         $data['permissions'] = $permissions;
-        if (View::exists('roles.create')) {
+        if (View::exists('roles.edit')) {
             return view('roles.edit', $data);
         } else {
             return view('laravel-permission::roles.edit', $data);
