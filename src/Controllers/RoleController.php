@@ -145,10 +145,12 @@ class RoleController extends Controller
             $permissions[] = ['module' => $value['module'],'id' => $value['id'], 'module_functions' => $moduleFunction];
         }
 
+        $data['role'] = $role;
+        $data['permissions'] = $permissions;
         if (View::exists('roles.create')) {
-            return view('roles.create', compact('role', 'permissions'));
+            return view('roles.edit', $data);
         } else {
-            return view('laravel-permission::roles.edit', compact('role', 'permissions'));
+            return view('laravel-permission::roles.edit', $data);
         }
     }
 
