@@ -184,7 +184,7 @@ class RoleController extends Controller
             $role->givePermissionTo($p);  
         }
 
-        if (View::exists('roles.create')) {
+        if (View::exists('roles.index')) {
             return redirect()->route('roles.index')->with('flash_message', 'Role'. $role->name.' updated!');
         } else {
             return redirect()->route('laravel-permission::roles.index')->with('flash_message', 'Role'. $role->name.' updated!');
