@@ -61,12 +61,13 @@ class UserController extends Controller
         // return $request->all();
         // return $request['roles'];
         $this->validate($request, [
-            'name'=>'required|max:120',
+            'first_name'=>'required|max:120',
+            'last_name'=>'required|max:120',
             'email'=>'required|email|unique:users',
             'password'=>'required|min:6|confirmed'
         ]);
 
-        $user = User::create($request->only('email', 'name', 'password'));
+        $user = User::create($request->only('email', 'first_name', 'last_name', 'password'));
 
         $roles = $request['roles'];
 
@@ -128,7 +129,8 @@ class UserController extends Controller
         // return $request->all();
         $user = User::findOrFail($id);
         $this->validate($request, [
-            'name'=>'required|max:120',
+            'first_name'=>'required|max:120',
+            'last_name'=>'required|max:120',
             'email'=>'required|email|unique:users,email,'.$id,
             'password'=>'required|min:6|confirmed'
         ]);

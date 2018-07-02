@@ -6,15 +6,20 @@
 
 <div class='col-lg-4 col-lg-offset-4'>
 
-    <h1><i class='fa fa-user-plus'></i> Edit {{$user->name}}</h1>
+    <h1><i class='fa fa-user-plus'></i> Edit {{$user->first_name.' '.$user->last_name}}</h1>
     <hr>
     {{-- @include ('errors.list') --}}
 
     {{ Form::model($user, array('route' => array('users.update', $user->id), 'method' => 'PUT')) }} {{-- Form model binding to automatically populate our fields with user data --}}
 
     <div class="form-group">
-        {{ Form::label('name', 'Name') }}
-        {{ Form::text('name', null, array('class' => 'form-control')) }}
+        {{ Form::label('first_name', 'First Name') }}
+        {{ Form::text('first_name', null, array('class' => 'form-control')) }}
+    </div>
+
+    <div class="form-group">
+        {{ Form::label('last_name', 'Last Name') }}
+        {{ Form::text('last_name', null, array('class' => 'form-control')) }}
     </div>
 
     <div class="form-group">

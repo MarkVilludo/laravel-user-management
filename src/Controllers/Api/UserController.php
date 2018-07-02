@@ -75,7 +75,8 @@ class UserController extends Controller
     public function store(Request $request)
     {
         // return $request->all();
-        $rules = ['name' => 'required',
+        $rules = ['first_name' => 'required',
+                  'last_name' => 'required',
                    'email' => 'email|required|unique:users,email', 
                    'status' => 'required', 
                    'password' => 'required'
@@ -88,7 +89,8 @@ class UserController extends Controller
             $statusCode = 422;
         } else {
             $newUser = new $this->user;
-            $newUser->name = $request->name;
+            $newUser->first_name = $request->first_name;
+            $newUser->last_name = $request->last_name;
             $newUser->email = $request->email;
             $newUser->status = $request->status;
             $newUser->password = bcrypt($request->password);
@@ -157,7 +159,8 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {   
         //update user details only.
-        $rules = ['name' => 'required',
+        $rules = ['first_name' => 'required',
+                  'last_name' => 'required',
                    'email' => 'required|'.Rule::unique('users')->ignore($id, 'id'),
                    'status' => 'required', 
                    'password'=>'required|min:6|confirmed'
@@ -172,6 +175,7 @@ class UserController extends Controller
         } else {
 
             $user = $this->user->findOrFail($id);
+            $user->first_name = $request->first_name;
             $user->name = $request->name;
             $user->email = $request->email;
             $user->status = $request->status;

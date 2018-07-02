@@ -38,7 +38,8 @@ class PassportController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'email' => 'required|unique:users,email',
             'password' => 'required'
         ]);
