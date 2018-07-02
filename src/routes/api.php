@@ -12,8 +12,6 @@
 */
 Route::post('/login', 'MarkVilludo\Permission\Controllers\Api\PassportController@login')->name('login');
 Route::post('/register', 'MarkVilludo\Permission\Controllers\Api\PassportController@register')->name('register');
-//checkout orders
-Route::post('/checkout','MarkVilludo\Permission\Controllers\Api\ShoppingCartController@checkout');
 
 Route::group(['middleware' => 'auth:api'], function(){
 	//group by v1
