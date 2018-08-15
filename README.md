@@ -198,7 +198,7 @@ use MarkVilludo\Permission\Models\Role;
 use MarkVilludo\Permission\Models\Permission;
 
 $role = Role::create(['name' => 'writer']);
-$permission = Permission::create(['name' => 'edit articles']);
+$permission = Permission::create(['module' => 'Articles', 'name' => 'edit articles']);
 ```
 
 The `HasRoles` adds Eloquent relationships to your models, which can be accessed directly or used as a base query:
