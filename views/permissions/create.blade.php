@@ -6,7 +6,7 @@
 
  <!-- //Main content page. -->
 
-<div class='col-lg-4 col-lg-offset-4'>
+<div class='col-lg-4 col-lg-offset-4' style="padding-top: 100px">
 
     {{-- @include ('errors.list') --}}
 
