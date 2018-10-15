@@ -15,7 +15,7 @@
         {{ Form::text('name', null, array('class' => 'form-control')) }}
     </div>
     <div class="form-group">
-        {{ Form::label('name', 'Module Name') }}
+        {{ Form::label('name', 'Module') }}
         {{ Form::text('module', null, array('class' => 'form-control')) }}
     </div>
     <br>

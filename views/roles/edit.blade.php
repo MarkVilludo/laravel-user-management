@@ -29,19 +29,23 @@
                 </div>
 
                 <h5><b>Assign Permissions</b></h5>
-                @foreach ($permissions as $permissionModule)
-                    <div class="col-md-12">
-                        {{Form::checkbox('') }}
-                        {{Form::label($permissionModule['module'], ucfirst($permissionModule['module'])) }}<br>
-                       
+                <div class="row" style="padding-bottom:20px">
+                    <div class="col-md-8">
+                        <strong>Module / Attributes</strong>
                     </div>
-                    <div class="row col-md-12">
+                    <div class="col-md-3" style="text-align:center">
+                        <strong>Allow</strong>
+                    </div>
+                </div>
+                @foreach ($permissions as $permissionModule)
+                    {{Form::label($permissionModule['module'], ucfirst($permissionModule['module'])) }}<br>
+                    <div class="row col-md-12" style="padding-left: 20px">
                         @foreach ($permissionModule['module_functions'] as $permission)
                             <div class="col-md-9">
                                 {{Form::label($permission['name'], ucfirst($permission['name'])) }}<br>
                             </div>
-                            <div class="col-md-3">
-                                {{Form::checkbox('permissions[]',  $permission['id'], $role->permissions) }}
+                            <div class="col-md-3" style="text-align:center">
+                                {{Form::checkbox('permissions[]',  $permission['id'], $role->permissions,["class"=> "checkbox"]) }}
                             </div>
                         @endforeach
                     </div>

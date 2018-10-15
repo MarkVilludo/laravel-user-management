@@ -7,22 +7,23 @@
  <!-- //Main content page. -->
 
 <div class='col-lg-4 col-lg-offset-4' style="padding-top: 100px">
+    <h4 class="page-title"><i class="fa fa-key"></i>Add Permission</h4>
 
     {{-- @include ('errors.list') --}}
 
     {{ Form::open(array('url' => 'permissions')) }}
 
     <div class="form-group">
-        {{ Form::label('name', 'Name') }}
+        {{ Form::label('name', 'Permission Name') }}
         {{ Form::text('name', '', array('class' => 'form-control')) }}
     </div>
     <br>
     <div class="form-group">
-        {{ Form::label('module', 'Module Name') }}
+        {{ Form::label('module', 'Module') }}
         {{ Form::text('module', '', array('class' => 'form-control')) }}
     </div>
     <br>
-    <h5><b>Assign Permission to Roles</b></h5>
+    <h5><b>Assign to Specific Roles</b></h5>
         <div class="row">
             <div class='col-lg-6 form-group'>
                 @foreach ($roles as $role)
