@@ -5,9 +5,16 @@
 @section('content')
 
 <div class='col-lg-4 col-lg-offset-4'>
-
-    <h1><i class='fa fa-user-plus'></i> Edit {{$user->first_name.' '.$user->last_name}}</h1>
-    <hr>
+    <div class="row" style="padding-bottom: 20px">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h4 class="pull-left">Edit User</h4>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a>
+            <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a>
+            <br><br>
+        </div>
+    </div>
     {{-- @include ('errors.list') --}}
 
     {{ Form::model($user, array('route' => array('users.update', $user->id), 'method' => 'PUT')) }} {{-- Form model binding to automatically populate our fields with user data --}}

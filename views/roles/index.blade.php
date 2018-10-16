@@ -5,12 +5,17 @@
 @section('content')
 
 <div class="col-lg-10 col-lg-offset-1">
-    <h4>
-        <i class="fa fa-key"></i> Roles
-    </h4>
-    <a href="{{ route('users.index') }}" class="btn btn-default pull-right">Users</a>
-    <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a>
-    <br><br>
+    <div class="row" style="padding-bottom: 20px">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h4 class="pull-left">Roles</h4>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <a href="{{ route('users.index') }}" class="btn btn-default pull-right">Users</a>
+            <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a>
+            <br><br>
+        </div>
+    </div>
+
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead>
@@ -42,8 +47,10 @@
 
         </table>
     </div>
+    <a href="{{ URL::to('roles/create') }}">
+        <button class="btn btn-success btn-custom waves-effect w-md waves-light m-b-5 pull-left"> <i class="fa fa-plus"> </i> Add Role</button>
+    </a>
 
-    <a href="{{ URL::to('roles/create') }}" class="btn btn-success">Add Role</a>
 
 </div>
 

@@ -1,6 +1,6 @@
  @extends('layouts.app')
 
-@section('title', '| Users')
+@section('title', '| Permissions')
 
 @section('content')
 
@@ -10,12 +10,16 @@
             <!-- Page-Title -->
             <!-- //Main content page. -->
             <div class="col-lg-10 col-lg-offset-1">
-                <div class="row col-lg-12">
-                   <h4 class="page-title"><i class="fa fa-key"></i>Permissions</h4>
+                <div class="row" style="padding-bottom: 20px">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <h4 class="pull-left">Permissions</h4>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a>
+                        <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a>
+                        <br><br>
+                    </div>
                 </div>
-                <a href="{{ URL::to('permissions/create') }}">
-                    <button class="btn btn-success btn-custom waves-effect w-md waves-light m-b-5 pull-right"> <i class="fa fa-plus"> </i> Add Permission</button>
-                </a>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead>
@@ -45,6 +49,9 @@
                         </tbody>
                     </table>
                 </div>
+                <a href="{{ URL::to('permissions/create') }}">
+                    <button class="btn btn-success btn-custom waves-effect w-md waves-light m-b-5 pull-left"> <i class="fa fa-plus"> </i> Add Permission</button>
+                </a>
             </div>
             <!-- End main content page -->
         </div>

@@ -6,11 +6,18 @@
 
  <!-- //Main content page. -->
 
-<div class='col-lg-4 col-lg-offset-4' style="padding-top: 100px">
-    <h4 class="page-title"><i class="fa fa-key"></i>Add Permission</h4>
-
+<div class='col-lg-6 col-md-6 col-lg-offset-4' style="padding-top: 40px">
+    <div class="row" style="padding-bottom: 20px">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h4 class="pull-left">Add Permission</h4>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a>
+            <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a>
+            <br><br>
+        </div>
+    </div>
     {{-- @include ('errors.list') --}}
-
     {{ Form::open(array('url' => 'permissions')) }}
 
     <div class="form-group">

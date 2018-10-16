@@ -5,9 +5,16 @@
 @section('content')
 
 <div class='col-lg-4 col-lg-offset-4'>
-
-    <h1><i class='fa fa-user-plus'></i> Add User</h1>
-    <hr>
+    <div class="row" style="padding-bottom: 20px">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h4 class="pull-left">Add User</h4>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a>
+            <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a>
+            <br><br>
+        </div>
+    </div>
 
     {{-- @include ('errors.list') --}}
 
@@ -48,7 +55,7 @@
 
     </div>
 
-    {{ Form::submit('Add', array('class' => 'btn btn-primary')) }}
+    {{ Form::submit('Save', array('class' => 'btn btn-block btn-primary')) }}
 
     {{ Form::close() }}
 

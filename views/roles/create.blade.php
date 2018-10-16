@@ -5,22 +5,18 @@
     <div class="content">
         <div class="container-fluid">
             <!-- Page-Title -->
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="page-title-box">
-                        
-                        <ol class="breadcrumb float-right">
-                            <li class="breadcrumb-item"><a href="{{url('roles/index')}}">Roles</a></li>
-                            <li class="breadcrumb-item active">Create</li>
-                        </ol>
-                        <div class="clearfix"></div>
+                       <!-- //Main content page. -->
+            <div class='col-lg-6 col-lg-offset-2'>
+                <div class="row" style="padding-bottom: 20px">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <h4 class="pull-left">Add Role</h4>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a>
+                        <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a>
+                        <br><br>
                     </div>
                 </div>
-            </div>
-            <!-- //Main content page. -->
-            <div class='col-lg-6 col-lg-offset-2'>
-                <h4 class="page-title"><i class="fa fa-key"></i>Add role</h4>
-                <hr>
                 {{-- @include ('errors.list') --}}
 
                 {{ Form::open(array('url' => 'roles')) }}
@@ -41,21 +37,31 @@
                 </div>
                 <div class='form-group'>
                     @foreach ($permissions as $permissionModule)
-                        {{Form::label($permissionModule['module'], ucfirst($permissionModule['module'])) }}
+                        <p>
+                            {{Form::label($permissionModule['module'], ucfirst($permissionModule['module'])) }}
+                        </p>
                         <div class="row col-md-12" style="padding-left: 20px">
                             @foreach ($permissionModule['module_functions'] as $permission)
                                 <div class="col-md-9">
                                     {{Form::label($permission['name'], ucfirst($permission['name'])) }}<br>
                                 </div>
                                 <div class="col-md-3" style="text-align:center">
-                                    {{Form::checkbox('permissions[]',  $permission['id']) }}
+
+                                    <div class="checkbox">
+                                        <label>
+                                          <input name="permissions[]" type="checkbox" value="{{$permission['id']}}" class="checkbox"  style="border:2px dotted #00f;display:block;background:#ff0000;"> 
+                                        </label>
+                                    </div>
+                                    <!-- {{Form::checkbox('permissions[]',  $permission['id']) }} -->
                                 </div>
                             @endforeach
                         </div>
                     @endforeach
                 </div>
+                <p style="padding-top: 50px">
 
-                {{ Form::submit('Add', array('class' => 'btn btn-primary')) }}
+                    {{ Form::submit('Save', array('class' => 'btn btn-block btn-primary')) }}
+                </p>
 
                 {{ Form::close() }}
 
@@ -68,5 +74,4 @@
 <!-- ============================================================== -->
 <!-- End Right content here -->
 <!-- ============================================================== -->
-      
 @endsection
