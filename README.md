@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-permission.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-permission)
 [![Build Status](https://img.shields.io/travis/spatie/laravel-permission/master.svg?style=flat-square)](https://travis-ci.org/spatie/laravel-permission)
-[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/a25f93ac-5e8f-48c8-a9a1-5d3ef3f9e8f2.svg?style=flat-square)](https://insight.sensiolabs.com/projects/a25f93ac-5e8f-48c8-a9a1-5d3ef3f9e8f2)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-permission.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-permission)
 [![StyleCI](https://styleci.io/repos/42480275/shield)](https://styleci.io/repos/42480275)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-permission.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-permission)
@@ -502,7 +501,8 @@ can be found [in this repo on GitHub](https://github.com/laracasts/laravel-5-rol
  ## Works also on Policies
     //create policy 
     php artisan make:policy RolePermissionsPolicy
-    <?php
+ ```   
+<?php
 
 namespace App\Policies;
 
@@ -532,7 +532,9 @@ class RolePermissionsPolicy
         }
     }
 }
-//Register policy in AuthServiceProvider
+```
+    //Register policy in AuthServiceProvider
+```
     use App\Policies\RolePermissionsPolicy;
     
     public function boot()
@@ -541,6 +543,7 @@ class RolePermissionsPolicy
 
         Gate::define('check-role-permission', 'App\Policies\RolePermissionsPolicy@index');
     }
+```
 
 ## License
 
