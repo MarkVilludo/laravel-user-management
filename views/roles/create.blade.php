@@ -46,13 +46,9 @@
                                     {{Form::label($permission['name'], ucfirst($permission['name'])) }}<br>
                                 </div>
                                 <div class="col-md-3" style="text-align:center">
-
                                     <div class="checkbox">
-                                        <label>
-                                          <input name="permissions[]" type="checkbox" value="{{$permission['id']}}" class="checkbox"  style="border:2px dotted #00f;display:block;background:#ff0000;"> 
-                                        </label>
+                                      <input name="permissions[]" type="checkbox" value="{{$permission['id']}}" class="checkbox"  style="border:2px dotted #00f;display:block;background:#ff0000;"> 
                                     </div>
-                                    <!-- {{Form::checkbox('permissions[]',  $permission['id']) }} -->
                                 </div>
                             @endforeach
                         </div>

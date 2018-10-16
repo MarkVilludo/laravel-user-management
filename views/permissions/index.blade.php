@@ -26,7 +26,7 @@
                             <tr>
                                 <th>Permissions</th>
                                 <th>Module</th>
-                                <th>Actions</th>
+                                <th width="20%">Actions</th>
                             </tr>
                         </thead>
                         <tbody>

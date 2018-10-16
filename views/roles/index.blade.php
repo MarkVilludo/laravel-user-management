@@ -22,7 +22,7 @@
                 <tr>
                     <th>Role</th>
                     <th>Permissions</th>
-                    <th>Operation</th>
+                    <th width="30%">Operation</th>
                 </tr>
             </thead>
 
