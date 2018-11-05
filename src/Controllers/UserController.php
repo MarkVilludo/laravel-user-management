@@ -26,13 +26,16 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
+        $permissions = Permission::all();
+        $data['users'] = $users;
+        $data['permissions'] = $permissions;
 
         if (View::exists('users.index')) {
-            return view('users.index')->with('users', $users);
+            return view('users.index', $data);
         } else if (View::exists('superadmin.users.index')) {
             return view('superadmin.users.index')->with('users', $users);
-        } else  {
-            return view('laravel-permission::users.index')->with('users', $users);
+        } else {
+            return view('laravel-permission::users.index', $data);
         }
     }
 
@@ -44,13 +47,16 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::get();
+        $permissions = Permission::all();
+        $data['roles'] = $roles;
+        $data['permissions'] = $permissions;
 
         if (View::exists('users.create')) {
-            return view('users.create', ['roles'=>$roles]);
+            return view('users.create', $data);
         } else if (View::exists('superadmin.users.create')) {
-            return view('superadmin.users.create', ['roles'=>$roles]);
+            return view('superadmin.users.create', $data);
         } else {
-            return view('laravel-permission::users.create', ['roles'=>$roles]);
+            return view('laravel-permission::users.create', $data);
         }
     }
 

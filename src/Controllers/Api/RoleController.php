@@ -5,6 +5,7 @@ namespace MarkVilludo\Permission\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use MarkVilludo\Permission\Models\Role;
+use MarkVilludo\Permission\Models\RoleHasPermission;
 use MarkVilludo\Permission\Models\Permission;
 use Auth;
 use Response;
@@ -13,10 +14,11 @@ use Config;
 
 class RoleController extends Controller
 {   
-    public function __construct(Permission $permission, Role $role) 
+    public function __construct(Permission $permission, RoleHasPermission $rolePermission, Role $role) 
     {   
         $this->role = $role;
         $this->permission = $permission;
+        $this->rolePermission = $rolePermission;
         // $this->middleware(['auth', 'isAdmin']);
     }
     /**
@@ -27,6 +29,23 @@ class RoleController extends Controller
     public function index()
     {
         return $role = $this->role->all();
+    }
+
+    public function rolePermissions(Request $request)
+    {
+        
+        $rolePermissions = $this->rolePermission->where('role_id', $request->role_id)->get();
+
+        $getPermissionsArray = [];
+        foreach ($rolePermissions as $rolePermission) {
+            $getPermissionsArray[] = [
+                'role_id' => $rolePermission->role_id,
+                'permission_id' => $rolePermission->permission_id,
+                'name' => $rolePermission->permission_name
+            ];
+        }
+        $statusCode = 200;
+        return Response::json(['data' => $getPermissionsArray], $statusCode);
     }
 
     /**

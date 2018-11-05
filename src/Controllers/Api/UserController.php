@@ -49,10 +49,8 @@ class UserController extends Controller
     {   
        
         // return $user_id;
-        $user = $this->user->where('id', $user_id)->with('orders')->with('wishlist')
+        $user = $this->user->where('id', $user_id)
                             ->with('product_reviews')
-                            ->with('billing_address')
-                            ->with('shipping_address')
                             ->first();
         if ($user) {
             $data['user'] = new UserResource($user);
@@ -125,9 +123,7 @@ class UserController extends Controller
     public function show($id)
     {
         if (auth()->user()->can('check-role-permission','Show user details')) {
-            $user =  $this->user->where('id', $id)->with('orders')
-                                ->with('billing_address')->with('shipping_address')
-                                ->with('wishlist.product')
+            $user =  $this->user->where('id', $id)
                                 ->first();
 
             $roles = Role::get(); //Get all roles
