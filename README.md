@@ -179,6 +179,11 @@ You can publish the views with:
 php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="views"
 ```
 
+You can publish the public assets with:
+```bash
+php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="assets"
+```
+
 ## Usage
 
 First add the `MarkVilludo\Permission\Traits\HasRoles` trait to your User model:
