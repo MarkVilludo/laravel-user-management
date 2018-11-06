@@ -24,6 +24,7 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Date/Time Added</th>
+                    <th>Expiration Date</th>
                     <th>User Roles</th>
                     <th>Operations</th>
                 </tr>
@@ -36,6 +37,7 @@
                     <td>{{ $user->first_name.' '.$user->last_name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->created_at->format('F d, Y h:ia') }}</td>
+                    <td>{{ $user->expiration_date ? $user->expiration_date : 'Never' }}</td>
                     <td>{{ $user->roles ?  $user->roles()->pluck('name')->implode(' ') : null }}</td>{{-- Retrieve array of roles associated to a user and convert to string --}}
 
                     <td>
