@@ -42,7 +42,7 @@
                                 View
                             </div>
                             <div class="col-md-2 text-center">
-                                Add
+                                Create
                             </div>
                             <div class="col-md-2 text-center">
                                 Edit

@@ -5,7 +5,7 @@
 @section('content')
 
 <!-- //Main content page. -->
-<div class='col-lg-6 col-md-6 col-lg-offset-4' style="padding: 20px 0px 20px 0px;">
+<div class='col-lg-8 col-md-8 col-lg-offset-4' style="padding: 20px 0px 20px 0px;">
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6">
             <h4 class="pull-left">Edit Permission</h4>

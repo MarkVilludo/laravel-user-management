@@ -5,28 +5,33 @@
     <div class="content">
         <div class="container-fluid">
             <!-- Page-Title -->
-
-            <!-- //Main content page. -->
-            <div class='col-lg-6 col-md-6 col-lg-offset-4'>
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <h4 class="pull-left">Edit Role: {{$role->name}}</h4>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a>
-                        <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a>
-                        <br><br>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-title-box">
+                        <h4 class="page-title"><i class="fa fa-key"></i>Add role</h4>
+                        <ol class="breadcrumb float-right">
+                            <li class="breadcrumb-item"><a href="{{url('roles/index')}}">Roles</a></li>
+                            <li class="breadcrumb-item active">Create</li>
+                        </ol>
+                        <div class="clearfix"></div>
                     </div>
                 </div>
-                {{-- @include ('errors.list') --}}
-                {{ Form::model($role, array('route' => array('roles.update', $role->id), 'method' => 'PUT')) }}
+            </div>
+            <!-- //Main content page. -->
+            <div class='col-lg-6 col-lg-offset-4'>
+                <div class="row col-lg-12 col-md-12 pb-2">
+                    <h4>Role Details</h4>
+                </div>
+                {{ Form::open(array('url' => 'roles')) }}
 
                 <div class="form-group">
-                    {{ Form::label('name', 'Role Name') }}
+                    <label for="first_name"> Role Name
+                        <small>(Required)</small>
+                    </label>
                     {{ Form::text('name', null, array('class' => 'form-control')) }}
                 </div>
 
-                 <h5><b>Permissions</b></h5>
+                <h5><b>Permissions</b></h5>
 
                 <div class="row">
                     <div class="col-md-2">
@@ -40,7 +45,7 @@
                                 View
                             </div>
                             <div class="col-md-2 text-center">
-                                Add
+                                Create
                             </div>
                             <div class="col-md-2 text-center">
                                 Edit
@@ -50,43 +55,89 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                @foreach ($permissions as $permissionModule)
 
-                    <div class="row" style="padding-left: 20px">
+                </div>
+                <div class='row form-group'>
+                    @foreach ($permissions as $permissionModule)
                         <div class="col-md-2">
                             {{Form::label($permissionModule['module'], ucfirst($permissionModule['module'])) }}
                         </div>
-                        <div class="row col-md-10">
-                            <div class="col-md-2">
-                                @if (count($permissionModule['module_functions']) == 4)
-                                    <input type="checkbox" name="full_access" class="{{$permissionModule['module']}}" class="form-control" @change="selectAll('{{$permissionModule['module']}}',this)">
-                                @endif
-                            </div>
+                        <div class="row col-md-10 pl-4">
+                                <div class="col-md-2">
+                                    @if (count($permissionModule['module_functions']) == 4)
+                                        <input type="checkbox" name="full_access" class="{{$permissionModule['module']}}" class="form-control" @change="selectAll('{{$permissionModule['module']}}',this)">
+                                    @endif
+                                </div>
                             @foreach ($permissionModule['module_functions'] as $permission)
+                             <!-- {{Form::label($permission['name'], ucfirst($permission['name'])) }}<br> -->
                                 <div class="col-md-2 text-center">
-                                    {{Form::checkbox('permissions[]',  $permission['id'], $role->permissions,["class"=> "checkbox"]) }}
+                                    <!-- <p>{{$permission['module']}}</p> -->
+                                    <div class="checkbox checkbox-primary">
+                                        <input name="permissions[]" id="{{$permission['module'].'-'.$permission['id']}}" value="{{$permission['id']}}" type="checkbox" class="{{$permission['module']}}">
+                                        <label for="{{$permission['module'].'-'.$permission['id']}}">
+                                            <!-- {{$permission['name']}} -->
+                                        </label>
+                                    </div>
+<!-- 
+                                    {{Form::checkbox('permissions[]',  $permission['id'], array('class' => $permission['module'])) }} -->
                                 </div>
                             @endforeach
                         </div>
-                    </div>
-                @endforeach
-                <br>
-                <p style="padding-top: 30px">
-                    {{ Form::submit('Update', array('class' => 'btn btn-block btn-primary')) }}
-                </p>
+                    @endforeach
+                </div>
 
-                {{ Form::close() }}    
+                {{ Form::submit('Save', array('class' => 'btn btn-block btn-primary')) }}
+
+                {{ Form::close() }}
+
             </div>
-            <!-- End main content page -->
+             <!-- End main content page -->
             <!-- end row -->
         </div>
-        <!-- end content -->
+            <!-- end content -->
     </div>
 <!-- ============================================================== -->
 <!-- End Right content here -->
 <!-- ============================================================== -->
- 
+<script src="{{url('assets/js/vue.js')}}"></script>
+<!-- <script src="{{url('assets/js/vue.min.js')}}"></script> -->
+<script src="{{url('assets/js/vue-resource.js')}}"></script>
+<script src="{{url('assets/js/axios.js')}}"></script>
+<!-- Include the Quill library -->
+<script src="{{url('assets/js/sweetalert2.all.min.js')}}"></script>
+<!-- jQuery  -->
+<script src="{{url('/assets/js/jquery.min.js')}}"></script>
+<script src="{{url('/assets/js/popper.min.js"></script><!-- Popper for Bootstrap --><!-- ')}}Tether for Bootstrap -->
+<script src="{{url('/assets/js/bootstrap.min.js')}}"></script>
+<!-- App js -->
+<script src="{{asset('assets/js/jquery.core.js')}}"></script>
+<script src="{{asset('assets/js/jquery.app.js')}}"></script>
+<script>
+    new Vue({
+    el: '.content',
+    data: {
+       
+    },
+    components: {
+    },
+    methods: {
+        selectAll(moduleClass, selectedPermission) {
+            console.log(selectedPermission)
+            if($('.'+moduleClass).is(":checked")){
+                $("."+moduleClass).attr("checked",true);
+            } else {
+                $("."+moduleClass).removeAttr("checked");
+            }
+            console.log(moduleClass)
+            
+        }
+    },
+    computed: {
+      
+    },
+        mounted() {
+        }
+    })
+
+</script>
 @endsection
-
-

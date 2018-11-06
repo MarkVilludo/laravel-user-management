@@ -20,31 +20,35 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Role</th>
+                    <th width="15%">Role</th>
                     <th>Permissions</th>
-                    <th width="30%">Operation</th>
+                    <th width="15%">Operation</th>
                 </tr>
             </thead>
-
             <tbody>
                 @foreach ($roles as $role)
                 <tr>
-
                     <td>{{ $role->name }}</td>
-
-                    <td>{{  $role->permissions()->pluck('name')->implode(' ') }}</td>{{-- Retrieve array of permissions associated to a role and convert to string --}}
                     <td>
-                    <a href="{{ URL::to('roles/'.$role->id.'/edit') }}" class="btn btn-info pull-left" style="margin-right: 3px;">Edit</a>
-
-                    {!! Form::open(['method' => 'DELETE', 'route' => ['roles.destroy', $role->id] ]) !!}
-                    {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-                    {!! Form::close() !!}
-
+                        @foreach($role->permissions as $permission)
+                           {{$permission->name.' '.$permission->module}},
+                        @endforeach
+                        <!-- {{-- Retrieve array of permissions associated to a role and convert to string --}}  -->
+                    <td>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="{{ URL::to('roles/'.$role->id.'/edit') }}" class="btn btn-info btn-block" >Edit</a>
+                            </div>
+                            <div class="col-md-6">
+                                {!! Form::open(['method' => 'DELETE', 'route' => ['roles.destroy', $role->id] ]) !!}
+                                {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                                {!! Form::close() !!}
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 @endforeach
             </tbody>
-
         </table>
     </div>
     <a href="{{ URL::to('roles/create') }}">

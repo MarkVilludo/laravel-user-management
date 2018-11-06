@@ -25,24 +25,26 @@
                         <thead>
                             <tr>
                                 <th>Permissions</th>
-                                <th>Module</th>
                                 <th width="20%">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($permissions as $permission)
                             <tr>
-                                <td>{{ $permission->name }}</td> 
-                                <td>{{ $permission->module }}</td> 
+                                <td>{{ $permission->module.' '.$permission->name }}</td> 
                                 <td>
-
-                                    <a class="btn btn-primary" href="{{ URL::to('permissions/'.$permission->id.'/edit') }}">
-                                      <i class="fa fa-pencil"></i> Edit
-                                    </a>
-                                
-                                     {!! Form::open(['method' => 'DELETE', 'route' => ['permissions.destroy', $permission->id] ]) !!}
-                                    {!! Form::submit('Delete', ['class' => 'btn w-sm btn-danger']) !!}
-                                    {!! Form::close() !!}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a class="btn btn-primary btn-block" href="{{ URL::to('permissions/'.$permission->id.'/edit') }}">
+                                              Edit
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            {!! Form::open(['method' => 'DELETE', 'route' =>   ['permissions.destroy', $permission->id] ]) !!}
+                                            {!! Form::submit('Delete', ['class' => 'btn w-sm btn-danger']) !!}
+                                            {!! Form::close() !!}
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach

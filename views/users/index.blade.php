@@ -41,15 +41,18 @@
                     <td>{{ $user->roles ?  $user->roles()->pluck('name')->implode(' ') : null }}</td>{{-- Retrieve array of roles associated to a user and convert to string --}}
 
                     <td>
-
-                    <a href="{{ route('users.edit', $user->id) }}">
-                        <button class="btn btn-info"> <i class="fa fa-pencil"> </i> Edit</button>
-                    </a>
-
-                    {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id] ]) !!}
-                    {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-                    {!! Form::close() !!}
-
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="{{ route('users.edit', $user->id) }}">
+                                    <button class="btn btn-info btn-block"> Edit </button>
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id] ]) !!}
+                                {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                                {!! Form::close() !!}
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 @endforeach
