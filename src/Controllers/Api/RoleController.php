@@ -41,7 +41,7 @@ class RoleController extends Controller
             $getPermissionsArray[] = [
                 'role_id' => $rolePermission->role_id,
                 'permission_id' => $rolePermission->permission_id,
-                'name' => $rolePermission->permission_name
+                'name' => $rolePermission->permission_name.' '.$rolePermission->roleAccess->module
             ];
         }
         $statusCode = 200;

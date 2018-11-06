@@ -5,11 +5,12 @@
     <div class="content">
         <div class="container-fluid">
             <!-- Page-Title -->
-                       <!-- //Main content page. -->
-            <div class='col-lg-6 col-lg-offset-2'>
-                <div class="row" style="padding-bottom: 20px">
+
+            <!-- //Main content page. -->
+            <div class='col-lg-6 col-md-6 col-lg-offset-4'>
+                <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6">
-                        <h4 class="pull-left">Add Role</h4>
+                        <h4 class="pull-left">Edit Role: {{$role->name}}</h4>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a>
@@ -18,56 +19,74 @@
                     </div>
                 </div>
                 {{-- @include ('errors.list') --}}
-
-                {{ Form::open(array('url' => 'roles')) }}
+                {{ Form::model($role, array('route' => array('roles.update', $role->id), 'method' => 'PUT')) }}
 
                 <div class="form-group">
-                    {{ Form::label('name', 'Name') }}
+                    {{ Form::label('name', 'Role Name') }}
                     {{ Form::text('name', null, array('class' => 'form-control')) }}
                 </div>
 
-                <h5><b>Assign Permissions</b></h5>
-                <div class="row" style="padding-bottom:20px">
-                    <div class="col-md-8">
-                        <strong>Module / Attributes</strong>
+                 <h5><b>Permissions</b></h5>
+
+                <div class="row">
+                    <div class="col-md-2">
                     </div>
-                    <div class="col-md-3" style="text-align:center">
-                        <strong>Allow</strong>
+                    <div class="col-md-10">
+                        <div class="row ">
+                            <div class="text-block">
+                                Full Access
+                            </div>
+                            <div class="col-md-2 text-center">
+                                View
+                            </div>
+                            <div class="col-md-2 text-center">
+                                Add
+                            </div>
+                            <div class="col-md-2 text-center">
+                                Edit
+                            </div>
+                            <div class="col-md-2 text-center">
+                                Delete
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class='form-group'>
-                    @foreach ($permissions as $permissionModule)
-                        <p>
+                @foreach ($permissions as $permissionModule)
+
+                    <div class="row" style="padding-left: 20px">
+                        <div class="col-md-2">
                             {{Form::label($permissionModule['module'], ucfirst($permissionModule['module'])) }}
-                        </p>
-                        <div class="row col-md-12" style="padding-left: 20px">
+                        </div>
+                        <div class="row col-md-10">
+                            <div class="col-md-2">
+                                @if (count($permissionModule['module_functions']) == 4)
+                                    <input type="checkbox" name="full_access" class="{{$permissionModule['module']}}" class="form-control" @change="selectAll('{{$permissionModule['module']}}',this)">
+                                @endif
+                            </div>
                             @foreach ($permissionModule['module_functions'] as $permission)
-                                <div class="col-md-9">
-                                    {{Form::label($permission['name'], ucfirst($permission['name'])) }}<br>
-                                </div>
-                                <div class="col-md-3" style="text-align:center">
-                                    <div class="checkbox">
-                                      <input name="permissions[]" type="checkbox" value="{{$permission['id']}}" class="checkbox"  style="border:2px dotted #00f;display:block;background:#ff0000;"> 
-                                    </div>
+                                <div class="col-md-2 text-center">
+                                    {{Form::checkbox('permissions[]',  $permission['id'], $role->permissions,["class"=> "checkbox"]) }}
                                 </div>
                             @endforeach
                         </div>
-                    @endforeach
-                </div>
-                <p style="padding-top: 50px">
-
-                    {{ Form::submit('Save', array('class' => 'btn btn-block btn-primary')) }}
+                    </div>
+                @endforeach
+                <br>
+                <p style="padding-top: 30px">
+                    {{ Form::submit('Update', array('class' => 'btn btn-block btn-primary')) }}
                 </p>
 
-                {{ Form::close() }}
-
+                {{ Form::close() }}    
             </div>
-             <!-- End main content page -->
+            <!-- End main content page -->
             <!-- end row -->
         </div>
-            <!-- end content -->
+        <!-- end content -->
     </div>
 <!-- ============================================================== -->
 <!-- End Right content here -->
 <!-- ============================================================== -->
+ 
 @endsection
+
+

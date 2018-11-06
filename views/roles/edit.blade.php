@@ -26,26 +26,49 @@
                     {{ Form::text('name', null, array('class' => 'form-control')) }}
                 </div>
 
-                <h5><b>Assign Permissions</b></h5>
-                <div class="row" style="padding-bottom:20px">
-                    <div class="col-md-7">
-                        <strong>Module / Attributes</strong>
+                 <h5><b>Permissions</b></h5>
+
+                <div class="row">
+                    <div class="col-md-2">
                     </div>
-                    <div class="col-md-4" style="text-align:center">
-                        <strong>Allow</strong>
+                    <div class="col-md-10">
+                        <div class="row ">
+                            <div class="text-block">
+                                Full Access
+                            </div>
+                            <div class="col-md-2 text-center">
+                                View
+                            </div>
+                            <div class="col-md-2 text-center">
+                                Add
+                            </div>
+                            <div class="col-md-2 text-center">
+                                Edit
+                            </div>
+                            <div class="col-md-2 text-center">
+                                Delete
+                            </div>
+                        </div>
                     </div>
                 </div>
                 @foreach ($permissions as $permissionModule)
-                    {{Form::label($permissionModule['module'], ucfirst($permissionModule['module'])) }}<br>
-                    <div class="row col-md-12" style="padding-left: 20px">
-                        @foreach ($permissionModule['module_functions'] as $permission)
-                            <div class="col-md-9">
-                                {{Form::label($permission['name'], ucfirst($permission['name'])) }}<br>
+
+                    <div class="row" style="padding-left: 20px">
+                        <div class="col-md-2">
+                            {{Form::label($permissionModule['module'], ucfirst($permissionModule['module'])) }}
+                        </div>
+                        <div class="row col-md-10">
+                            <div class="col-md-2">
+                                @if (count($permissionModule['module_functions']) == 4)
+                                    <input type="checkbox" name="full_access" class="{{$permissionModule['module']}}" class="form-control" @change="selectAll('{{$permissionModule['module']}}',this)">
+                                @endif
                             </div>
-                            <div class="col-md-3" style="text-align:center">
-                                {{Form::checkbox('permissions[]',  $permission['id'], $role->permissions,["class"=> "checkbox"]) }}
-                            </div>
-                        @endforeach
+                            @foreach ($permissionModule['module_functions'] as $permission)
+                                <div class="col-md-2 text-center">
+                                    {{Form::checkbox('permissions[]',  $permission['id'], $role->permissions,["class"=> "checkbox"]) }}
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 @endforeach
                 <br>
