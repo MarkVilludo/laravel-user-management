@@ -30,6 +30,10 @@ class PermissionServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../resources/migrations/create_permission_tables.php.stub' => $this->app->databasePath().'/migrations/'.$timestamp.'_create_permission_tables.php',
             ], 'migrations');
+
+            $this->publishes([
+                __DIR__.'/../resources/seeder/PermissionSeeder.php' => $this->app->databasePath().'/seeder/PermissionSeeder.php',
+            ], 'seeder');
         }
 
         //publish also assets in public folder for the css and js plugins
