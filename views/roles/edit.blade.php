@@ -21,8 +21,10 @@
                 {{-- @include ('errors.list') --}}
                 {{ Form::model($role, array('route' => array('roles.update', $role->id), 'method' => 'PUT')) }}
 
-                <div class="form-group">
-                    {{ Form::label('name', 'Role Name') }}
+                 <div class="form-group">
+                    <label for="first_name"> Role Name
+                        <small>(Required)</small>
+                    </label>
                     {{ Form::text('name', null, array('class' => 'form-control')) }}
                 </div>
 
