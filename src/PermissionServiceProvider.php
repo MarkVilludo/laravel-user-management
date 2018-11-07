@@ -32,7 +32,7 @@ class PermissionServiceProvider extends ServiceProvider
             ], 'migrations');
 
             $this->publishes([
-                __DIR__.'/../resources/seeder/PermissionSeeder.php' => $this->app->databasePath().'/seeder/PermissionSeeder.php',
+                __DIR__.'/../resources/seeder/PermissionSeeder.php' => $this->app->databasePath().'/seeds/PermissionSeeder.php',
             ], 'seeder');
         }
 

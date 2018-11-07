@@ -19,6 +19,7 @@ Route::prefix('v1')->group(function () {
 	Route::prefix('permissions')->group(function () {
 		//All permissions
 		Route::get('/', 'MarkVilludo\Permission\Controllers\Api\PermissionController@index')->name('api.permissions');
+		Route::get('/create', 'MarkVilludo\Permission\Controllers\Api\PermissionController@create')->name('api.group_permissions');
 		//Create new permission
 		Route::post('/', 'MarkVilludo\Permission\Controllers\Api\PermissionController@store');
 		//Update permission
@@ -26,6 +27,7 @@ Route::prefix('v1')->group(function () {
 		//Delete permission
 		Route::delete('/{id}', 'MarkVilludo\Permission\Controllers\Api\PermissionController@destroy');
 	});
+
 	
 	Route::get('/role-permissions', 'MarkVilludo\Permission\Controllers\Api\RoleController@rolePermissions')->name('api.role_permissions');
 
@@ -34,23 +36,26 @@ Route::prefix('v1')->group(function () {
 		//All roles
 		Route::get('/', 'MarkVilludo\Permission\Controllers\Api\RoleController@index')->name('api.roles');
 		//Create new role
+		
 		Route::post('/', 'MarkVilludo\Permission\Controllers\Api\RoleController@store');
 		//Update role
 		Route::post('/{id}', 'MarkVilludo\Permission\Controllers\Api\RoleController@update');
 		//Delete role
 		Route::delete('/{id}', 'MarkVilludo\Permission\Controllers\Api\RoleController@destroy');
 	});
+
 	 	
 	//Users
 	Route::prefix('users')->group(function () {
 		//user list
-	  	Route::get('/','MarkVilludo\Permission\Controllers\Api\UserController@index');
+	  	Route::get('/','MarkVilludo\Permission\Controllers\Api\UserController@index')->name('api.users');
 		//Get user details
 		Route::get('/{id}','MarkVilludo\Permission\Controllers\Api\UserController@show');
 		//create user
 		Route::post('/', 'MarkVilludo\Permission\Controllers\Api\UserController@store');
 		//Update user details
 		Route::post('/{id}','MarkVilludo\Permission\Controllers\Api\UserController@update');
+		
 	});
 
 });
