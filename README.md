@@ -69,6 +69,11 @@ running the migrations:
 $ php artisan migrate
 ```
 
+You can publish Initial Permission Seeder, then update it's content depending on your needs.
+```bash
+php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="seeder"
+```
+
 You can publish the config-file with:
 ```bash
 php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="config"
