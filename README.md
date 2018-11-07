@@ -254,6 +254,25 @@ class User extends Authenticatable
 
 ```
 
+
+## Setup User Resource: `php artisan make: resource UserResource` 
+
+Define each return data from user table.
+```
+  return 
+        [
+            'id' => $this->id,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'email' => $this->email,
+            'expiration_date' => date('M d, Y h:i:s', strtotime($this->expiration_date)),
+            'email_verified_at' => $this->email_verified_at,
+            'is_expire_access' => $this->is_expire_access,
+            'created_at' => $this->created_at->format('M d, Y'),
+            'roles' => $this->roles->pluck('name') //to get all roles of users. 
+        ];
+
+```
 This package allows for users to be associated with roles. Permissions can be associated with roles.
 A `Role` and a `Permission` are regular Eloquent models. They can have a name and can be created like this:
 
