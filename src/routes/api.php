@@ -20,6 +20,8 @@ Route::prefix('v1')->group(function () {
 		//All permissions
 		Route::get('/', 'MarkVilludo\Permission\Controllers\Api\PermissionController@index')->name('api.permissions');
 		Route::get('/create', 'MarkVilludo\Permission\Controllers\Api\PermissionController@create')->name('api.group_permissions');
+		//get permissions in edit role
+		Route::get('/{$id}/edit', 'MarkVilludo\Permission\Controllers\Api\PermissionController@edit')->name('api.edit_group_permissions');
 		//Create new permission
 		Route::post('/', 'MarkVilludo\Permission\Controllers\Api\PermissionController@store');
 		//Update permission
