@@ -19,12 +19,11 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
 
         if (View::exists('roles.index')) {
-            return view('roles.index')->with('roles', $roles);
+            return view('roles.index');
         } else {
-            return view('laravel-permission::roles.index')->with('roles', $roles);
+            return view('laravel-permission::roles.index');
         }
     }
 
@@ -202,13 +201,18 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        $role = Role::findOrFail($id);
-        $role->delete();
+        $role = Role::find($id);
 
-        if (View::exists('roles.index')) {
-            return redirect()->route('roles.index')->with('flash_message', 'Role deleted!');
+        if ($role) {
+            $role->delete();
+            $data['message'] = 'Successfully deleted role.';
+            $statusCode = 200;
+
         } else {
-            return redirect()->route('laravel-permission::roles.index')->with('flash_message', 'Role deleted!');
+            $data['message'] = 'Not found role.';
+            $statusCode = 404;
         }
+
+        return response()->json($data, $statusCode);
     }
 }

@@ -25,17 +25,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        $permissions = Permission::all();
-        $data['users'] = $users;
-        $data['permissions'] = $permissions;
-
         if (View::exists('users.index')) {
-            return view('users.index', $data);
+            return view('users.index');
         } else if (View::exists('superadmin.users.index')) {
-            return view('superadmin.users.index')->with('users', $users);
+            return view('superadmin.users.index');
         } else {
-            return view('laravel-permission::users.index', $data);
+            return view('laravel-permission::users.index');
         }
     }
 
@@ -151,7 +146,7 @@ class UserController extends Controller
 
         $input = $request->only(['name', 'email', 'password']);
         $roles = $request['roles'];
-        $user->fill($input)->save();
+        $user->fill($input)->update();
 
         //collect roles name and syn in user roles
         $rolesArray = [];

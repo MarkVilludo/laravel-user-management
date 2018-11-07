@@ -2,6 +2,7 @@
 
 namespace MarkVilludo\Permission\Controllers\Api;
 
+use App\Http\Resources\RoleResource;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use MarkVilludo\Permission\Models\Role;
@@ -28,7 +29,17 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return $role = $this->role->all();
+        $roles = $this->role->paginate(10);
+
+        if ($roles) {
+          $data['message'] = 'roles list';
+          $statusCode = 200;
+        } else {
+          $data['message'] = 'No roles available';
+          $statusCode = 200;
+        }
+
+        return RoleResource::collection($roles);
     }
 
     public function rolePermissions(Request $request)
