@@ -187,17 +187,18 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
+        $user = User::find($id);
 
-        if (View::exists('users.index')) {
-            return redirect()->route('users.index')->with('flash_message', 'User successfully deleted.');
-        } else if (View::exists('superadmin.users.index')) {
-            return redirect()->route('superadmin.users.index')->with('flash_message', 'User successfully deleted.');
+        if ($user) {
+            $user->delete();
+            $data['message'] = 'Successfully deleted user.';
+            $statusCode = 200;
+
         } else {
-            return redirect()->route('laravel-permission::users.index')
-                ->with('flash_message',
-                 'User successfully deleted.');
+            $data['message'] = 'Not found user.';
+            $statusCode = 404;
         }
+
+        return response()->json($data, $statusCode);
     }
 }
