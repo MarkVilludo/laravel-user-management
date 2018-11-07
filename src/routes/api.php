@@ -16,12 +16,13 @@ Route::post('/register', 'MarkVilludo\Permission\Controllers\Api\PassportControl
 //group by v1
 Route::prefix('v1')->group(function () {
 
+	//EDIT role
 	Route::prefix('permissions')->group(function () {
 		//All permissions
 		Route::get('/', 'MarkVilludo\Permission\Controllers\Api\PermissionController@index')->name('api.permissions');
+
 		Route::get('/create', 'MarkVilludo\Permission\Controllers\Api\PermissionController@create')->name('api.group_permissions');
-		//get permissions in edit role
-		Route::get('/{$id}/edit', 'MarkVilludo\Permission\Controllers\Api\PermissionController@edit')->name('api.edit_group_permissions');
+
 		//Create new permission
 		Route::post('/', 'MarkVilludo\Permission\Controllers\Api\PermissionController@store');
 		//Update permission
@@ -30,14 +31,15 @@ Route::prefix('v1')->group(function () {
 		Route::delete('/{id}', 'MarkVilludo\Permission\Controllers\Api\PermissionController@destroy');
 	});
 
-	
+	//get permissions in edit role
 	Route::get('/role-permissions', 'MarkVilludo\Permission\Controllers\Api\RoleController@rolePermissions')->name('api.role_permissions');
 
 	
 	Route::prefix('roles')->group(function () {
 		//All roles
+		Route::get('{id}/edit', 'MarkVilludo\Permission\Controllers\Api\RoleController@edit')->name('api.edit_group_permissions');
+		
 		Route::get('/', 'MarkVilludo\Permission\Controllers\Api\RoleController@index')->name('api.roles');
-		//Create new role
 		
 		Route::post('/', 'MarkVilludo\Permission\Controllers\Api\RoleController@store');
 		//Update role
@@ -45,7 +47,6 @@ Route::prefix('v1')->group(function () {
 		//Delete role
 		Route::delete('/{id}', 'MarkVilludo\Permission\Controllers\Api\RoleController@destroy');
 	});
-
 	 	
 	//Users
 	Route::prefix('users')->group(function () {

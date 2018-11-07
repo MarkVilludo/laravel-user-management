@@ -124,7 +124,7 @@ class PermissionController extends Controller
      */
     public function edit($id)
     {
-        //
+       
     }
 
     /**

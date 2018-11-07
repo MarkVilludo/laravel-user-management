@@ -122,7 +122,46 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        //
+        // return 'test';
+        $role = Role::findOrFail($id);
+        $permissionsArray = Permission::all();
+
+        // begin the iteration for grouping module name
+        $permissions = [];
+        $modulefunctionArray = [];
+        $result = [];
+
+        foreach ($permissionsArray as $key => $module) {
+            $modulefunctionArray[$module->module] = ['module' => $module->module, 'guard_name' => $module->guard_name, 'id' => $module->id];
+
+        }
+        foreach ($modulefunctionArray as $keyModule => $value) {
+            $moduleFunction = [];
+            $moduleName = $value['module'];
+            $isAllAccessModule = [];
+            foreach ($permissionsArray as $key => $module) {
+                if ($module->module == $moduleName) {
+                    $rolePermissionExist = $this->rolePermission->where('permission_id', $module->id)
+                                                                ->where('role_id', $id)
+                                                                ->first();
+
+
+
+                    $moduleFunction[] = ['id' => $module->id,'module' => $module->module,'name' => $module->name, 'checked' => $rolePermissionExist ? 1 : 0];
+
+                 
+                    $isAllAccessModule[] = $rolePermissionExist ? 1 : 0;
+                }
+            }
+            //count all module function with access
+            $permissions[] = ['module' => $value['module'],'id' => $value['id'], 'module_functions' => $moduleFunction, 'checked' => array_sum($isAllAccessModule) == 4 ? true : false];
+        }
+
+        $data['role'] = $role;
+        $data['permissions'] = $permissions;
+
+
+        return Response::json($data, 200);
     }
 
     /**
