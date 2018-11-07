@@ -35,7 +35,7 @@
                                 <td>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <a class="btn btn-primary btn-block" href="{{ URL::to('permissions/'.$permission->id.'/edit') }}">
+                                            <a class="btn btn-info btn-block" href="{{ URL::to('permissions/'.$permission->id.'/edit') }}">
                                               Edit
                                             </a>
                                         </div>
