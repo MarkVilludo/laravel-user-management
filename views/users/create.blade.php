@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class='col-lg-8 col-lg-offset-8 content'>
+<div class='col-lg-10 col-lg-offset-10 content'>
     <div class="row" style="padding-bottom: 50px">
         <div class="col-lg-6 col-md-6 col-sm-6">
             <h4 class="pull-left">Add New User</h4>

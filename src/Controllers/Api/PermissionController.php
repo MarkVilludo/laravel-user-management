@@ -36,7 +36,30 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        //
+        $permissionsArray = Permission::all();
+
+        // begin the iteration for grouping module name
+        $permissions = [];
+        $modulefunctionArray = [];
+        $result = [];
+
+        foreach ($permissionsArray as $key => $module) {
+            $modulefunctionArray[$module->module] = ['module' => $module->module, 'guard_name' => $module->guard_name, 'id' => $module->id];
+
+        }
+        foreach ($modulefunctionArray as $keyModule => $value) {
+            $moduleFunction = [];
+            $moduleName = $value['module'];
+            foreach ($permissionsArray as $key => $module) {
+                if ($module->module == $moduleName) {
+                    $moduleFunction[] = ['id' => $module->id,'module' => $module->module,'name' => $module->name, 'checked' => false];
+                }
+            }
+            $permissions[] = ['module' => $value['module'],'id' => $value['id'],  'checked' => false, 'module_functions' => $moduleFunction];
+        }
+
+        $data['permissions'] = $permissions;
+        return Response::json($data, 200);
     }
 
     /**

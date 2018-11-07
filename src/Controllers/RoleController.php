@@ -57,10 +57,12 @@ class RoleController extends Controller
             $permissions[] = ['module' => $value['module'],'id' => $value['id'], 'module_functions' => $moduleFunction];
         }
 
+        $data['permissions'] = $permissions;
+
         if (View::exists('roles.create')) {
-            return view('roles.create', ['permissions'=>$permissions]);
+            return view('roles.create', $data);
         } else {
-            return view('laravel-permission::roles.create', ['permissions'=>$permissions]);
+            return view('laravel-permission::roles.create', $data);
         }
     }
 
@@ -73,7 +75,7 @@ class RoleController extends Controller
     public function store(Request $request)
     {   
         $this->validate($request, [
-            'name'=>'required|unique:roles|max:10',
+            'name'=>'required|unique:roles|max:20',
             'permissions' =>'required',
             ]
         );
@@ -147,6 +149,7 @@ class RoleController extends Controller
 
         $data['role'] = $role;
         $data['permissions'] = $permissions;
+
         if (View::exists('roles.edit')) {
             return view('roles.edit', $data);
         } else {

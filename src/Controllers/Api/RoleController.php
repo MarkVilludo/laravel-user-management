@@ -55,7 +55,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**

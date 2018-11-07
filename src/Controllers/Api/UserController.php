@@ -23,21 +23,27 @@ class UserController extends Controller
     public function __construct(User $user) {
         $this->user = $user;
     }
-    public function index()
+    public function index(Request $request)
     {   
-       
-        $users = UserResource::collection($this->user->active()->paginate(10));
+
+        if ($request->search || $request->role) {
+            $users = $this->user->filterByName($request->search)
+                                ->filterByRole($request->role)
+                                ->paginate(10);
+        } else {
+            $users = $this->user->paginate(10);
+        }
+
 
         if ($users) {
-            $data['message'] = 'Users list';
-            $statusCode = 200;
+          $data['message'] = 'Users list';
+          $statusCode = 200;
         } else {
-            $data['message'] = 'No users available';
-            $statusCode = 200;
+          $data['message'] = 'No users available';
+          $statusCode = 200;
         }
-        $data['users'] = $users;
-        $data['roles'] = Role::get();
-        return Response::json(['data' => $data], $statusCode);
+
+        return UserResource::collection($users);
        
     }
      /**
@@ -194,16 +200,5 @@ class UserController extends Controller
             }
         }
         return Response::json($data, $statusCode);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

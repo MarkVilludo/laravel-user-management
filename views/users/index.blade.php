@@ -16,11 +16,31 @@
         </div>
     </div>
 
-    <div class="table-responsive">
+        <div class="row pb-2">
+            <div class="col-md-3">
+                <a href="{{ route('users.create') }}">
+                    <button class="btn btn-success btn-custom waves-effect w-md waves-light m-b-5 pull-left"> <i class="fa fa-plus"> </i> Add User</button>
+                </a>
+            </div>
+            <div class="col-md-9">
+                <div class="form-inline pull-right">
+                      <label>Search User: </label>
+                    <input type="text" name="search" v-model="search" @change="filter()" class="form-control">
+                </div>
+              
+            </div>
+        </div>
+        <div class="row pb-2">
+            <div class="col-md-3">
+                <select class="form-control" @change="filter()" v-model="filterByRoles">
+                    <option value="">Filter Roles</option>
+                    <option v-if="roles" v-for="role in roles" v-bind:value="role.id">@{{role.name}}</option>
+                </select>
+            </div>
+        </div>
         <table class="table table-bordered table-striped">
-
-            <thead>
-                <tr>
+            <thead align="center">
+               <tr>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Date/Time Added</th>
@@ -29,40 +49,47 @@
                     <th>Operations</th>
                 </tr>
             </thead>
-
-            <tbody>
-                @foreach ($users as $user)
-                <tr>
-                    <td>{{ $user->first_name.' '.$user->last_name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->created_at->format('F d, Y h:ia') }}</td>
-                    <td>{{ $user->expiration_date ? $user->expiration_date : 'Never' }}</td>
-                    <td>{{ $user->roles ?  $user->roles()->pluck('name')->implode(' ') : null }}</td>{{-- Retrieve array of roles associated to a user and convert to string --}}
-
+            <tbody align="center">
+                <tr v-if="users" v-for="user in users">
+                    <td>@{{user.first_name+' '+user.last_name}}</td>
+                    <td>@{{user.email}}</td>
+                    <td>@{{user.created_at}}</td>
+                    <td>@{{user.expiration_date}}</td>
+                    <td>
+                        <ul>
+                            <li v-if="user.roles" v-for="role in user.roles">@{{role}}</li>
+                        </ul>
+                    </td>
                     <td>
                         <div class="row">
                             <div class="col-md-6">
-                                <a href="{{ route('users.edit', $user->id) }}">
-                                    <button class="btn btn-info btn-block"> Edit </button>
-                                </a>
+                                <button class="btn btn-info btn-block" @click="editUser(user)"> Edit </button>
                             </div>
                             <div class="col-md-6">
-                               <!--  {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id] ]) !!}
-                                {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-                                {!! Form::close() !!} -->
-                                <button class="btn btn-danger btn-block" @click="deleteUser({{$user}})"> Delete </button>
+                                <button class="btn btn-danger btn-block" @click="deleteUser(user)"> Delete </button>
                             </div>
                         </div>
+
+
                     </td>
                 </tr>
-                @endforeach
+                <tr v-if="users.length == 0">
+                    <td colspan="8" class="text-center">No data found</td>
+                </tr>
             </tbody>
-
         </table>
-    </div>
-    <a href="{{ route('users.create') }}">
-        <button class="btn btn-success btn-custom waves-effect w-md waves-light m-b-5 pull-left"> <i class="fa fa-plus"> </i> Add User</button>
-    </a>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <ul class="pagination">
+                    <li class="paginate_button page-item previous" id="datatable-editable_previous"><a href="#" aria-controls="datatable-editable" data-dt-idx="0" tabindex="0" class="page-link" :disabled="pagination.current_page == pagination.from" @click.prevent="changePage(pagination.current_page - 1,'previous')">Previous</a></li>
+                    <li v-for="page in pages" class="paginate_button page-item active">
+                        <a href="#" :class="isCurrentPage(page) ? 'is-current selected-page' : ''" @click.prevent="changePage(page)" aria-controls="datatable-editable" data-dt-idx="1" tabindex="0" class="page-link">@{{page}}</a></li>
+
+                    <li class="paginate_button page-item next" id="datatable-editable_next"><a href="#" aria-controls="datatable-editable" data-dt-idx="7" tabindex="0" class="page-link" :disabled="pagination.current_page >= pagination.last_page" @click.prevent="changePage(pagination.current_page + 1,'next')">Next</a></li>
+                </ul>
+            </div>
+        </div>
+    
 </div>
 <script src="{{url('assets/js/vue.js')}}"></script>
 <!-- <script src="{{url('assets/js/vue.min.js')}}"></script> -->
@@ -81,12 +108,116 @@
     new Vue({
     el: '.content',
     data: {
-       
+        users: [],
+        roles: [],
+        search: '',
+        filterByRoles: '',
+        pagination: '',
+        pages: '',
+        from: '',
+        to: '',
+        offset: '',
+        firstPage: '',
+        nextPage: '',
+        prevPage: '',
+        lastPage: '',
+        noResultFound : false
     },
     components: {
     },
     methods: {
-       deleteUser(user) {
+        getUsers(url){
+            axios.get(url, {
+                headers: {
+                    'Authorization': this.header_authorization,
+                    'Accept': this.header_accept
+                }
+            }).then((response) => {
+                this.users = response.data.data;
+                if (this.users.length > 0) {
+                    this.noResultFound = true;
+                } else {
+                    this.noResultFound = false;
+                }
+                this.pagination = response.data.meta;  
+                //get last page item
+                this.pages = response.data.meta.last_page;
+                this.path = response.data.meta.path;
+
+                this.firstPage = response.data.links.first;
+                this.nextPage = response.data.links.next;
+                this.prevPage = response.data.links.prev;
+                this.lastPage = response.data.meta.last_page;
+                console.log(this.users)
+            });
+        },
+        getRoles(url) {
+            axios.get(url, {
+                headers: {
+                    'Authorization': this.header_authorization,
+                    'Accept': this.header_accept
+                }
+            }).then((response) => {
+                this.roles = response.data;
+            });
+        },
+        filter() {
+            if (this.search && this.search.length >= 3) {
+                this.searchFunction();
+            } else {
+                this.searchFunction();
+            }
+        },
+        searchFunction() {
+            axios.get('{{route('api.users')}}'+"?search="+this.search+"&role="+this.filterByRoles)
+            .then((response) => {
+                console.log(response)
+                this.users = response.data.data;
+                if (this.users.length > 0) {
+                    this.noResultFound = true;
+                } else {
+                    this.noResultFound = false;
+                }
+
+                this.pagination = response.data.meta;  
+                //get last page item
+                this.pages = response.data.meta.last_page;
+                this.path = response.data.meta.path;
+
+                this.firstPage = response.data.links.first;
+                this.nextPage = response.data.links.next;
+                this.prevPage = response.data.links.prev;
+                this.lastPage = response.data.links.last_page;
+            });
+        },
+        isCurrentPage(page) {
+            return this.pagination.current_page === page;
+        },
+        editUser(user) {
+            console.log(user.id)
+            // console.log(window.location.href)
+            window.location.href = "{{request()->root().'/users' }}/"+user.id+"/edit";
+
+        },
+        changePage(page, step) {
+            // console.log(this.lastPage)
+            console.log(page)
+          
+            if (page) {
+                this.pagination.current_page = page;
+                if (step == 'previous' && this.pagination.current_page >= 1) {
+                    this.products = [];
+                    this.getUsers(this.prevPage);
+                } else if(step == 'next' && this.pagination.current_page <= this.pagination.last_page){
+                    this.products = [];
+                    this.getUsers(this.nextPage);
+                } else if(!step){
+                    this.products = [];
+                    this.getUsers(this.path+ "?page=" + page+ "&role=" + this.filterByRoles);
+                }
+            }
+        },
+        deleteUser(user) {
                 console.log(user)
                 swal({
                     title: 'Delete',
@@ -120,12 +251,15 @@
                         });
                     }
                 });
-            }
+        }
     },
     computed: {
       
     },
         mounted() {
+
+            this.getUsers("{{route('api.users')}}");
+            this.getRoles("{{route('api.roles')}}");
         }
     })
 
