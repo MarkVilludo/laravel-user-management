@@ -191,17 +191,23 @@ php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceP
 
 ## Usage
 
-First add the `MarkVilludo\Permission\Traits\HasRoles` trait to your User model:
+First add the `MarkVilludo\Permission\Traits\HasRoles` trait to your User model, then paste the ff code below.
 ```php
-use Illuminate\Foundation\Auth\User as Authenticatable;
+<?php
+
+namespace App;
+
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use MarkVilludo\Permission\Traits\HasRoles;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    use Notifiable;
     use HasRoles;
-    
-    // ...
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -210,7 +216,42 @@ class User extends Authenticatable
     protected $fillable = [
         'first_name', 'last_name', 'email', 'password', 'is_expire_access', 'expiration_date',
     ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+
+    public function scopeFilterByName($query, $key)
+    {
+        return $query->where('first_name', 'like', '%' . $key . '%')
+            ->orWhere('last_name', 'like', '%' . $key . '%')
+            ->orWhere('email', 'like', '%' . $key . '%');
+    }
+
+    //get by product variant colors
+    public function scopeFilterByRole($query, $role)
+    {
+        if ($role) {
+            return  $query->withAndWhereHas('roles', function ($query) use ($role) {
+                    $query->where('id', $role);
+            });
+        }
+    }
+
+    //for withandwherehas
+    public function scopeWithAndWhereHas($query, $relation, $constraint)
+    {
+        return $query->whereHas($relation, $constraint)->with([$relation => $constraint]);
+    }
+
 }
+
 ```
 
 This package allows for users to be associated with roles. Permissions can be associated with roles.
