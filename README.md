@@ -324,32 +324,10 @@ $users = User::role('writer')->get(); // Only returns users with the role 'write
 ```
 The scope can accept a string, a `MarkVilludo\Permission\Models\Role` object or an `\Illuminate\Support\Collection` object.
 
-### Using permissions
-A permission can be given to a user:
+### Using permissions check if can access in specific permission ``Add`` in ``Users`` module.
+
 ```php
-$user->givePermissionTo('edit articles');
-
-// You can also give multiple permission at once
-$user->givePermissionTo('edit articles', 'delete articles');
-
-// You may also pass an array
-$user->givePermissionTo(['edit articles', 'delete articles']);
-```
-
-A permission can be revoked from a user:
-```php
-$user->revokePermissionTo('edit articles');
-```
-
-You can test if a user has a permission:
-```php
-$user->hasPermissionTo('edit articles');
-```
-
-Saved permissions will be registered with the `Illuminate\Auth\Access\Gate` class. So you can
-test if a user has a permission with Laravel's default `can` function:
-```php
-$user->can('edit articles');
+$user->canAccess('Add','Users');
 ```
 
 ### Using roles and permissions
@@ -405,26 +383,6 @@ A permission can be revoked from a role:
 ```php
 $role->revokePermissionTo('edit articles');
 ```
-
-The `givePermissionTo` and `revokePermissionTo` functions can accept a 
-string or a `Spatie\Permission\Models\Permission` object.
-
-Saved permission and roles are also registered with the `Illuminate\Auth\Access\Gate` class.
-```php
-$user->can('edit articles');
-```
-
-All permissions of roles that user is assigned to are inherited to the 
-user automatically. In addition to these permissions particular permission can be assigned to the user too. For instance: 
-```php
-$role->givePermissionTo('edit articles');
-$user->assignRole('writer');
-
-$user->givePermissionTo('delete articles');
-```
-In above example a role is given permission to edit articles and this role is assigned to a user. Now user can edit articles and additionaly delete articles. The permission of 'delete articles' is his direct permission because it is assigned directly to him. When we call `$user->hasDirectPermission('delete articles')` it returns `true` and `false` for `$user->hasDirectPermission('edit articles')`. 
-
-This method is useful if one has a form for setting permissions for roles and users in his application and want to restrict to change inherited permissions of roles of user, i.e. allowing to change only direct permissions of user.
 
 You can list all of theses permissions:
 ```php
