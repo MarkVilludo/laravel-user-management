@@ -256,11 +256,11 @@ Define each return data from user table.
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
-            'expiration_date' => date('M d, Y h:i:s', strtotime($this->expiration_date)),
+            'expiration_date' => date('M d, Y', strtotime($this->expiration_date)),
             'email_verified_at' => $this->email_verified_at,
             'is_expire_access' => $this->is_expire_access,
-            'created_at' => $this->created_at->format('M d, Y'),
-            'roles' => $this->roles->pluck('name') //to get all roles of users. 
+            'created_at' => $this->created_at->format('M d, Y') .' / '.$this->created_at->format('h:i a'),
+            'roles' => $this->roles->pluck('name')
         ];
 
 ```
