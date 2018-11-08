@@ -26,18 +26,9 @@ You can test if a user has a permission with Laravel's default `can` function:
 $user->can('edit articles');
 ```
 
-If you are using a Laravel version lower than 5.2.28, and want a drop-in middleware to check permissions, check out [our authorize package](https://github.com/spatie/laravel-authorize).
+## Licensed
 
-Spatie is webdesign agency in Antwerp, Belgium. You'll find an overview of all 
-our open source projects [on our website](https://spatie.be/opensource).
-
-## Postcardware
-
-You're free to use this package (it's [MIT-licensed](LICENSE.md)), but if it makes it to your production environment we highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using.
-
-Our address is: Spatie, Samberstraat 69D, 2060 Antwerp, Belgium.
-
-The best postcards will get published on the open source page on our website.
+You're free to use this package (it's [MIT-licensed](LICENSE.md)), but if it makes it to your production environment we highly appreciate you sending us a message.
 
 ## Installation
 
@@ -546,8 +537,6 @@ If you discover any security related issues, please email [mark.villudo@synergy8
 ## Credits
 -  Spatie
 - [Freek Van der Herten](https://github.com/freekmurze)
-- [All Contributors](../../contributors)
-
 
 This package is heavily based on [Jeffrey Way](https://twitter.com/jeffrey_way)'s awesome [Laracasts](https://laracasts.com) lessons
 on [roles and permissions](https://laracasts.com/series/whats-new-in-laravel-5-1/episodes/16). His original code
@@ -561,6 +550,7 @@ can be found [in this repo on GitHub](https://github.com/laracasts/laravel-5-rol
 - [bican/roles](https://github.com/romanbican/roles)
 
 ## Additional Features
+
 ## Additional setup (Features) collective Html
    //required laravel collective in composer json
    "laravelcollective/html": "^5.4.0",
