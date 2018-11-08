@@ -15,10 +15,9 @@ Once installed you can do stuff like this:
 // Adding permissions to a user
 $user->givePermissionTo('edit articles');
 
-// Adding permissions via a role
+// Assign role to specific user
 $user->assignRole('writer');
 
-$role->givePermissionTo('edit articles');
 ```
 
 You can test if a user has a permission with Laravel's default `can` function:
@@ -188,9 +187,12 @@ First add the `MarkVilludo\Permission\Traits\HasRoles` trait to your User model,
 
 namespace App;
 
+
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use MarkVilludo\Permission\Traits\HasRoles;
+use MarkVilludo\Permission\Models\Permission;
+use MarkVilludo\Permission\Models\RoleHasPermission;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -241,7 +243,30 @@ class User extends Authenticatable
         return $query->whereHas($relation, $constraint)->with([$relation => $constraint]);
     }
 
+    public static function checkAccess($permissionName, $moduleName)
+    {
+        // return $permissionName.'-'.$moduleName;
+        $roleIds = auth()->user()->roles->pluck('id');
+        //get permission id base on permission and module name
+        $permissionData = Permission::where('name', $permissionName)
+                                        ->where('module', $moduleName)
+                                        ->first();
+        if ($permissionData) {
+            $checkIfHasPermission = RoleHasPermission::whereIn('role_id', $roleIds)
+                                        ->where('permission_id', $permissionData->id)
+                                        ->first();
+
+            if ($checkIfHasPermission) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }
+
 
 ```
 
