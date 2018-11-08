@@ -234,7 +234,7 @@ class User extends Authenticatable
             ->orWhere('email', 'like', '%' . $key . '%');
     }
 
-    //get by product variant colors
+    //get by roles
     public function scopeFilterByRole($query, $role)
     {
         if ($role) {
