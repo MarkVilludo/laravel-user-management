@@ -299,6 +299,21 @@ Define each return data from roles table and it's permissions.
             'permissions' => $this->permissions
         ];
 ```
+
+## Access User Management pages 
+To access the package controller by placing another \ in front you tell Laravel to start searching in the root namespace.
+
+```
+
+//include this part in your routes/web.php
+Route::group(['middleware' => 'auth'], function() {
+
+	Route::resource('users', '\MarkVilludo\Permission\Controllers\UserController');
+	Route::resource('roles', '\MarkVilludo\Permission\Controllers\RoleController');
+	Route::resource('permissions', '\MarkVilludo\Permission\Controllers\PermissionController');
+});
+
+```
 This package allows for users to be associated with roles. Permissions can be associated with roles.
 A `Role` and a `Permission` are regular Eloquent models. They can have a name and can be created like this:
 
@@ -434,7 +449,9 @@ currently logged in user has all or any of a given list of roles.
 @else
     I don't have all of these roles...
 @endhasallroles
+```
 
+```php
 @if(auth()->user()->checkAccess('View', 'Users'))
     <button class="btn btn-success btn-custom waves-effect w-md waves-light m-b-5 pull-left">View User</button>
 @endif
