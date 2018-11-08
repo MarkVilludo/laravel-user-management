@@ -434,6 +434,11 @@ currently logged in user has all or any of a given list of roles.
 @else
     I don't have all of these roles...
 @endhasallroles
+
+@if(auth()->user()->checkAccess('View', 'Users'))
+    <button class="btn btn-success btn-custom waves-effect w-md waves-light m-b-5 pull-left">View User</button>
+@endif
+
 ```
 
 You can use Laravel's native `@can` directive to check if a user has a certain permission.
