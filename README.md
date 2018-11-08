@@ -12,17 +12,15 @@ was [introduced in version 5.1.11](http://christoph-rumpel.com/2015/09/new-acl-f
 
 Once installed you can do stuff like this:
 ```php
-// Adding permissions to a user
-$user->givePermissionTo('edit articles');
 
 // Assign role to specific user
 $user->assignRole('writer');
 
 ```
 
-You can test if a user has a permission with Laravel's default `can` function:
+You can test if a user has a permission with specific permission and module name.
 ```php
-$user->can('edit articles');
+$user->canAccess('View','Users');
 ```
 
 ## Licensed
