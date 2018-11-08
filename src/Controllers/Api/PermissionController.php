@@ -106,28 +106,6 @@ class PermissionController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-       
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -153,20 +131,5 @@ class PermissionController extends Controller
             $statusCode = 200;
         }
         return Response::json(['data' => $data], $statusCode);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {   
-        return Config::get('app_messages.NotYetimplemented');
-        //reason need to remove role attach in $id (permission).
-
-        // $permission = Permission::findOrFail($id);
-        // $permission->delete();
     }
 }

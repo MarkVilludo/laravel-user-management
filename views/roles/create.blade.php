@@ -2,11 +2,11 @@
 @section('content')
 
     <!-- Start content -->
-    <div class="content">
+    <div class="content pl-4">
         <div class="container-fluid">
             <!-- Page-Title -->
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-8">
                     <div class="page-title-box">
                         <h4 class="page-title"><i class="fa fa-key"></i>Add role</h4>
                         <ol class="breadcrumb float-right">
@@ -31,10 +31,11 @@
                     {{ Form::text('name', null, array('class' => 'form-control')) }}
                 </div>
 
-                <h5><b>Permissions</b></h5>
+                
 
-                <div class="row">
+                <div class="row pb-4">
                     <div class="col-md-2">
+                        <h5><b>Module</b></h5>
                     </div>
                     <div class="col-md-2 text-center">
                         Full Access
@@ -137,7 +138,8 @@
                     permission.checked = false;
                 }
             });   
-        }, selectEachPermission(seletectedModule, selectedPermission, moduleFunctions) {
+        }, 
+        selectEachPermission(seletectedModule, selectedPermission, moduleFunctions) {
             console.log(seletectedModule)
             console.log(moduleFunctions)
 
@@ -165,7 +167,6 @@
                 seletectedModule.checked = false;
             }
             console.log(countCheck)
-
         }
     },
     computed: {

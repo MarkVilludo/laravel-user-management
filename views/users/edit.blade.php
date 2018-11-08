@@ -4,13 +4,12 @@
 
 @section('content')
 
-<div class='col-lg-8 col-lg-offset-8 content'>
-    <div class="row" style="padding-bottom: 50px">
+<div class='col-lg-8 col-lg-offset-8 content pl-4'>
+    <div class="row pt-4" style="padding-bottom: 50px">
         <div class="col-lg-6 col-md-6 col-sm-6">
             <h4 class="pull-left">Edit User</h4>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
-            <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a>
             <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a>
             <br><br>
         </div>
@@ -94,6 +93,7 @@
         </div>
     </div>
     <div class='form-group'>
+        <label>Permissions: </label>
         <ul>
             <li  v-for="permission in unique(collectionPermissions.permissionsData, 'name')">@{{permission.name}}</li>
         </ul>
@@ -182,7 +182,7 @@
                     'Accept': this.header_accept
                 }
             }).then((response) => {
-                this.roles = response.data;
+                this.roles = response.data.data;
             });
         },
         isInArray(value, array) {

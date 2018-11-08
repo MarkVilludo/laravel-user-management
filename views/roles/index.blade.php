@@ -4,27 +4,27 @@
 
 @section('content')
 
-<div class="content col-lg-10 col-lg-offset-1">
-    <div class="row" style="padding-bottom: 20px">
+<div class="content col-lg-10 col-lg-offset-1 pl-4">
+    <div class="row pt-4" style="padding-bottom: 20px">
         <div class="col-lg-6 col-md-6 col-sm-6">
             <h4 class="pull-left">Roles</h4>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
             <a href="{{ route('users.index') }}" class="btn btn-default pull-right">Users</a>
-            <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a>
             <br><br>
         </div>
     </div>
-
-   <a href="{{ URL::to('roles/create') }}">
-        <button class="btn btn-success btn-custom waves-effect w-md waves-light m-b-5 pull-left"> <i class="fa fa-plus"> </i> Add Role</button>
-    </a>
+    <div class="row pb-4 pl-2">
+         <a href="{{ URL::to('roles/create') }}">
+            <button class="btn btn-success btn-custom waves-effect w-md waves-light m-b-5 pull-left"> <i class="fa fa-plus"> </i> Add Role</button>
+        </a>
+    </div>
     <table class="table table-bordered table-striped">
         <thead align="center">
             <tr>
                 <th width="15%">Role</th>
                 <th>Permissions</th>
-                <th width="15%">Operation</th>
+                <th width="15%">Operations</th>
             </tr>
         </thead>
         <tbody align="center">
@@ -33,7 +33,7 @@
                 <td>
                     <ul>
                         <span v-if="role.permissions" v-for="permission in role.permissions">
-                            @{{permission.module+' '+permission.name+','}}
+                            @{{permission.module+' '+permission.name+' / '}}
                         </span>
                     </ul>
                 </td>
@@ -46,8 +46,6 @@
                             <button class="btn btn-danger btn-block" @click="deleteRole(role)"> Delete </button>
                         </div>
                     </div>
-
-
                 </td>
             </tr>
             <tr v-if="roles.length == 0">
@@ -55,7 +53,7 @@
             </tr>
         </tbody>
     </table>
-    <div class="row">
+    <div class="row pt-4">
         <div class="col-sm-12 col-md-12">
             <ul class="pagination">
                 <li class="paginate_button page-item previous" id="datatable-editable_previous"><a href="#" aria-controls="datatable-editable" data-dt-idx="0" tabindex="0" class="page-link" :disabled="pagination.current_page == pagination.from" @click.prevent="changePage(pagination.current_page - 1,'previous')">Previous</a></li>

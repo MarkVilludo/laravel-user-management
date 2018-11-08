@@ -29,7 +29,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = $this->role->paginate(10);
+        $roles = $this->role->paginate(20);
 
         if ($roles) {
           $data['message'] = 'roles list';
@@ -57,16 +57,6 @@ class RoleController extends Controller
         }
         $statusCode = 200;
         return Response::json(['data' => $getPermissionsArray], $statusCode);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-
     }
 
     /**
@@ -112,17 +102,6 @@ class RoleController extends Controller
             }
         }
         return Response::json(['data' => $data], $statusCode);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -221,16 +200,5 @@ class RoleController extends Controller
             }
         }
         return Response::json(['data' => $data], $statusCode);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

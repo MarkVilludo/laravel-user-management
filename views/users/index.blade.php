@@ -4,19 +4,18 @@
 
 @section('content')
 
-<div class="content col-lg-10 col-lg-offset-1">
-    <div class="row" style="padding-bottom: 20px">
+<div class="content col-lg-10 col-lg-offset-1 pl-4">
+    <div class="row pt-4" style="padding-bottom: 20px">
         <div class="col-lg-6 col-md-6 col-sm-6">
             <h4 class="pull-left">Users</h4>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
             <a href="{{ route('roles.index') }}" class="btn btn-default pull-right">Roles</a>
-            <a href="{{ route('permissions.index') }}" class="btn btn-default pull-right">Permissions</a>
             <br><br>
         </div>
     </div>
 
-        <div class="row pb-2">
+        <div class="row pb-2 ">
             <div class="col-md-3">
                 <a href="{{ route('users.create') }}">
                     <button class="btn btn-success btn-custom waves-effect w-md waves-light m-b-5 pull-left"> <i class="fa fa-plus"> </i> Add User</button>
@@ -24,13 +23,13 @@
             </div>
             <div class="col-md-9">
                 <div class="form-inline pull-right">
-                      <label>Search User: </label>
+                      <label>Search User: </label> &nbsp;
                     <input type="text" name="search" v-model="search" @change="filter()" class="form-control">
                 </div>
               
             </div>
         </div>
-        <div class="row pb-2">
+        <div class="row pb-4">
             <div class="col-md-3">
                 <select class="form-control" @change="filter()" v-model="filterByRoles">
                     <option value="">Filter Roles</option>
@@ -42,11 +41,11 @@
             <thead align="center">
                <tr>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Date/Time Added</th>
-                    <th>Expiration Date</th>
-                    <th>User Roles</th>
-                    <th>Operations</th>
+                    <th width="20%">Email</th>
+                    <th width="18%">Date / Time Created</th>
+                    <th>User Expiry Date</th>
+                    <th width="18%">Roles</th>
+                    <th width="15%">Operations</th>
                 </tr>
             </thead>
             <tbody align="center">
@@ -56,9 +55,7 @@
                     <td>@{{user.created_at}}</td>
                     <td>@{{user.expiration_date}}</td>
                     <td>
-                        <ul>
-                            <li v-if="user.roles" v-for="role in user.roles">@{{role}}</li>
-                        </ul>
+                            <span v-if="user.roles" v-for="role in user.roles">@{{role+' / '}}</span>
                     </td>
                     <td>
                         <div class="row">
@@ -69,8 +66,6 @@
                                 <button class="btn btn-danger btn-block" @click="deleteUser(user)"> Delete </button>
                             </div>
                         </div>
-
-
                     </td>
                 </tr>
                 <tr v-if="users.length == 0">
@@ -78,7 +73,7 @@
                 </tr>
             </tbody>
         </table>
-        <div class="row">
+        <div class="row pt-4">
             <div class="col-sm-12 col-md-12">
                 <ul class="pagination">
                     <li class="paginate_button page-item previous" id="datatable-editable_previous"><a href="#" aria-controls="datatable-editable" data-dt-idx="0" tabindex="0" class="page-link" :disabled="pagination.current_page == pagination.from" @click.prevent="changePage(pagination.current_page - 1,'previous')">Previous</a></li>
@@ -89,7 +84,7 @@
                 </ul>
             </div>
         </div>
-    
+
 </div>
 <script src="{{url('assets/js/vue.js')}}"></script>
 <!-- <script src="{{url('assets/js/vue.min.js')}}"></script> -->
@@ -158,7 +153,7 @@
                     'Accept': this.header_accept
                 }
             }).then((response) => {
-                this.roles = response.data;
+                this.roles = response.data.data;
             });
         },
         filter() {
