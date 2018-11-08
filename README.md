@@ -273,6 +273,18 @@ Define each return data from user table.
         ];
 
 ```
+
+## Setup Role Resource: `php artisan make: resource RoleResource` 
+
+Define each return data from roles table and it's permissions.
+```
+  return 
+        [
+            'id' => $this->id,
+            'name' => $this->name,
+            'permissions' => $this->permissions
+        ];
+```
 This package allows for users to be associated with roles. Permissions can be associated with roles.
 A `Role` and a `Permission` are regular Eloquent models. They can have a name and can be created like this:
 
