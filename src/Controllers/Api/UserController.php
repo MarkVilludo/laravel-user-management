@@ -42,12 +42,33 @@ class UserController extends Controller
           $data['message'] = 'No users available';
           $statusCode = 200;
         }
-
         return UserResource::collection($users);
-       
     }
+
      /**
-     * Display user orders
+     * Display no pagination
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getUsers(Request $request)
+    {
+       $user = User::filterByName($request->search)
+                   ->filterByRole($request->role)
+                   ->where('type', 'admin')
+                   ->get();
+
+       if ($user) {
+           $data = UserResource::collection($user);
+           return $data;
+       } else {
+           $data['message'] = 'There is no players available.';
+           $statusCode = 200;
+           return response()->json($data, $statusCode);
+       }
+    }
+    
+    /**
+     * get profile details
      *
      * @return \Illuminate\Http\Response
      */
@@ -56,7 +77,6 @@ class UserController extends Controller
        
         // return $user_id;
         $user = $this->user->where('id', $user_id)
-                            ->with('product_reviews')
                             ->first();
         if ($user) {
             $data['user'] = new UserResource($user);
@@ -67,7 +87,7 @@ class UserController extends Controller
             $statusCode = 400;
         }
 
-        return Response::json($data, $statusCode);
+        return response()->json($data, $statusCode);
     }
 
     /**

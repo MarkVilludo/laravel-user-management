@@ -60,5 +60,7 @@ Route::prefix('v1')->group(function () {
 		Route::post('/{id}','MarkVilludo\Permission\Controllers\Api\UserController@update');
 		
 	});
+	
+  	Route::get('/users-list', 'MarkVilludo\Permission\Controllers\Api\UserController@getUsers')->name('api.users.list');
 
 });

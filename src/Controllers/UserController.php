@@ -5,6 +5,7 @@ namespace MarkVilludo\Permission\Controllers;
 use MarkVilludo\Permission\Models\Permission;
 use App\Http\Controllers\Controller;
 use MarkVilludo\Permission\Models\Role;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\User;
 use Session;
@@ -56,6 +57,7 @@ class UserController extends Controller
     }
 
     /**
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -68,11 +70,22 @@ class UserController extends Controller
         $this->validate($request, [
             'first_name'=>'required|max:120',
             'last_name'=>'required|max:120',
-            'email'=>'required|email|unique:users',
-            'password'=>'required|min:6|confirmed'
+            'email'=>'required|email|unique:users'
         ]);
 
-        $user = User::create($request->only('email', 'first_name', 'last_name', 'password', 'is_expire_access', 'expiration_date'));
+        $user = new User;
+        $randomPassword = str_random(8);
+
+        $user->email = $request->email;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->password = bcrypt($randomPassword);
+        $user->is_expire_access = $request->is_expire_access;
+        $user->expiration_date = $request->expiration_date;
+        $user->save();
+
+
+        $this->sendCredentials($user, $randomPassword);
 
         $roles = $request['roles'];
 
@@ -93,6 +106,16 @@ class UserController extends Controller
         } else {
             return view('laravel-permission::users.index')->with('users', $users)->with('flash_message','User successfully added.');
         }
+    }
+
+    public function sendCredentials($user, $randomPassword)
+    {
+        $emails = $user->email;
+        Mail::send('emails.send_credentials', ['project_title' => 'MPBL', 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'email' => $user->email, 'newPassword' => $randomPassword], function ($message) use ($emails) {
+           $message->from(env('MAIL_FROM', 'mark.villudo@synergy88digital.com'));
+           $message->to($emails);
+           $message->subject("MPBL Credentials");
+       });
     }
 
     /**
@@ -140,19 +163,19 @@ class UserController extends Controller
         $this->validate($request, [
             'first_name'=>'required|max:120',
             'last_name'=>'required|max:120',
-            'email'=>'required|email|unique:users,email,'.$id,
-            'password'=>'required|min:6|confirmed'
+            'email'=>'required|email|unique:users,email,'.$id
         ]);
 
         $user->email = $request->email;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
-        $user->password = bcrypt($request->password);
         $user->is_expire_access = $request->is_expire_access;
         $user->expiration_date = $request->expiration_date;
         $user->update();
+
         $roles = $request['roles'];
      
+
         //collect roles name and syn in user roles
         $rolesArray = [];
         if (count($request['roles']) > 0) {

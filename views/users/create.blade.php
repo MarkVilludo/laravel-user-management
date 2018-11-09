@@ -97,15 +97,6 @@
             <li  v-for="permission in unique(collectionPermissions.permissionsData, 'name')">@{{permission.name}}</li>
         </ul>
     </div>
-    <div class="form-group">
-        {{ Form::label('password', 'Password') }}<br>
-        {{ Form::password('password', array('class' => 'form-control')) }}
-
-    </div>
-    <div class="form-group">
-        {{ Form::label('password', 'Confirm Password') }}<br>
-        {{ Form::password('password_confirmation', array('class' => 'form-control')) }}
-    </div>
     {{ Form::close() }}
 </div>
 <script src="{{url('assets/js/vue.js')}}"></script>
@@ -134,7 +125,7 @@
     data: {
         question: '',
         is_expire_access: 0,
-        expiration_date: '', 
+        expiration_date: '',
         options: [
             {
                 'text': '', 'is_correct': false
