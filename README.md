@@ -240,7 +240,7 @@ class User extends Authenticatable
     {
         return $query->whereHas($relation, $constraint)->with([$relation => $constraint]);
     }
-
+    
     public static function checkAccess($permissionName, $moduleName)
     {
         // return $permissionName.'-'.$moduleName;
@@ -291,6 +291,7 @@ Define each return data from user table.
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
+	    'type' => $this->type, //nullable for special purposes.
             'expiration_date' => date('M d, Y', strtotime($this->expiration_date)),
             'email_verified_at' => $this->email_verified_at,
             'is_expire_access' => $this->is_expire_access,
