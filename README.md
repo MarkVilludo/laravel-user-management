@@ -327,14 +327,13 @@ Route::group(['middleware' => 'auth'], function() {
 
 ```
 This package allows for users to be associated with roles. Permissions can be associated with roles.
-A `Role` and a `Permission` are regular Eloquent models. They can have a name and can be created like this:
+A `Role` and a `Permission` are regular Eloquent models. Role can have a name and can be created like this:
 
 ```php
 use MarkVilludo\Permission\Models\Role;
-use MarkVilludo\Permission\Models\Permission;
 
 $role = Role::create(['name' => 'writer']);
-$permission = Permission::create(['module' => 'Articles', 'name' => 'edit articles']);
+
 ```
 
 The `HasRoles` adds Eloquent relationships to your models, which can be accessed directly or used as a base query:
@@ -494,10 +493,6 @@ public function handle($request, Closure $next, $role, $permission)
        abort(403);
     }
     
-    if (! $request->user()->can($permission)) {
-       abort(403);
-    }
-
     return $next($request);
 }
 ```
