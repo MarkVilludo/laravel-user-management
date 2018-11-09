@@ -79,6 +79,7 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
+        $user->type = 'admin';
         $user->password = bcrypt($randomPassword);
         $user->is_expire_access = $request->is_expire_access;
         $user->expiration_date = $request->expiration_date;
@@ -169,6 +170,7 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
+        $user->type = 'admin';
         $user->is_expire_access = $request->is_expire_access;
         $user->expiration_date = $request->expiration_date;
         $user->update();
