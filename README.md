@@ -267,7 +267,19 @@ class User extends Authenticatable
 
 
 ```
+## Setup ``env``
+We send password in add new user. \n So we need to Define each mail driver, username, password, encryption and mail from. ex:
 
+```
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.sendgrid.net
+MAIL_PORT=587
+MAIL_USERNAME=apikey
+MAIL_PASSWORD=SG.QSaTRD4xQkSULUbbZbF1yg.oDr7zwINfMbaLtvNHFToUYj35ZXxqq6l-SXUN1TpBFs123
+MAIL_ENCRYPTION=tls
+MAIL_FROM=mark.villudo@synergy88digital.com
+
+```
 
 ## Setup User Resource: `php artisan make: resource UserResource` 
 
