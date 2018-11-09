@@ -144,10 +144,15 @@ class UserController extends Controller
             'password'=>'required|min:6|confirmed'
         ]);
 
-        $input = $request->only(['name', 'email', 'password']);
+        $user->email = $request->email;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->password = bcrypt($request->password);
+        $user->is_expire_access = $request->is_expire_access;
+        $user->expiration_date = $request->expiration_date;
+        $user->update();
         $roles = $request['roles'];
-        $user->fill($input)->update();
-
+     
         //collect roles name and syn in user roles
         $rolesArray = [];
         if (count($request['roles']) > 0) {

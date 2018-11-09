@@ -63,13 +63,13 @@
                 {{ Form::label('expiration_date', 'Access Expiry Date') }}
                 <div class="radio radio-primary pt-1">
                     <span class="pr-2">
-                        <input id="expiration_date_1" name="is_expire_access" value='1' type="radio">
+                        <input id="expiration_date_1" name="is_expire_access" v-model="is_expire_access" value='0' type="radio" @change="onSelectExpiration()">
                         <label for="expiration_date_1">
                            Never
                         </label>
                     </span>
                     <span class="pl-2">
-                        <input id="expiration_date_2" name="is_expire_access" value='0' type="radio">
+                        <input id="expiration_date_2" name="is_expire_access" v-model="is_expire_access" value='1' type="radio" @change="onSelectExpiration()">
                         <label for="expiration_date_2">
                            On
                         </label>
@@ -78,7 +78,7 @@
             </div>
         </div>
         <div class="col-lg-4 col-md-4 pt-4">
-            {{ Form::date('expiration_date', '', array('class' => 'form-control')) }}
+             <input type="date" id="expiration_date" v-model="expiration_date" :disabled="is_expire_access == 0" name="expiration_date" class="form-control">
         </div>
     </div>
     <label>Select Role</label> <br>
@@ -134,7 +134,8 @@
     el: '.content',
     data: {
         selectedRoles: [],
-        is_active: false,
+        is_expire_access: "{{$user->is_expire_access}}",
+        expiration_date: "{{$user->expiration_date}}",
         options: [
             {
                 'text': '', 'is_correct': false
@@ -195,13 +196,10 @@
                 this.getPermissions(roles);
                 vm.collectionPermissions.permissionId = [];
                 vm.collectionPermissions.permissionsData = [];
-
                 vm.collectionPermissions.roleIds = vm.collectionPermissions.roleIds.filter(item => item !== roleId);
-
             } else {
                 vm.collectionPermissions.roleIds.push(roleId);
                 this.getPermissions(vm.collectionPermissions.roleIds);
-
             }
         }, 
         getPermissions(roles) {
@@ -222,6 +220,14 @@
                     });
                 });
             });
+        },
+        onSelectExpiration() {
+            if (this.is_expire_access == 1) {
+                this.expiration_date = "{{$user->expiration_date}}";
+            } else {
+                this.expiration_date = '';
+
+            }
         }
     },
     computed: {

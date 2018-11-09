@@ -61,13 +61,13 @@
                 {{ Form::label('expiration_date', 'Access Expiry Date') }}
                 <div class="radio radio-primary pt-1">
                     <span class="pr-2">
-                        <input id="expiration_date_1" name="is_expire_access" value='1' type="radio">
+                        <input id="expiration_date_1" v-model="is_expire_access" v-bind:value="0" name="is_expire_access" value='1' type="radio">
                         <label for="expiration_date_1">
                            Never
                         </label>
                     </span>
                     <span class="pl-2">
-                        <input id="expiration_date_2" name="is_expire_access" value='0' type="radio">
+                        <input id="expiration_date_2" v-model="is_expire_access" v-bind:value="1" name="is_expire_access" value='0' type="radio">
                         <label for="expiration_date_2">
                            On
                         </label>
@@ -76,7 +76,8 @@
             </div>
         </div>
         <div class="col-lg-4 col-md-4 pt-4">
-            {{ Form::date('expiration_date', '', array('class' => 'form-control')) }}
+            <input type="date" id="expiration_date" v-model="expiration_date" :disabled="is_expire_access == 0" name="expiration_date" class="form-control">
+
         </div>
     </div>
     <label>Select Role</label> <br>
@@ -132,7 +133,8 @@
     el: '.content',
     data: {
         question: '',
-        is_active: false,
+        is_expire_access: 0,
+        expiration_date: '', 
         options: [
             {
                 'text': '', 'is_correct': false
