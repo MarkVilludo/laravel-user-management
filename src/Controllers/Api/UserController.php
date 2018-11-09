@@ -96,6 +96,27 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    public function checkExistEmail(Request $request)
+    {
+     
+      $user = $this->user->where('email', $request->email)->first();
+
+      if ($user) {
+        $data['exist'] = true;
+      } else {
+        $data['exist'] = false;
+      }
+      
+      return Response::json($data, 200);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
         // return $request->all();
