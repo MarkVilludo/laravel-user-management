@@ -82,10 +82,10 @@
         </div>
     </div>
     <label>Select Role</label> <br>
-    <div class="row pt-2" style="padding-left: 20px">
-         <div class="col-md-2 pb-2"  v-for="(role, index) in roles">
-            <div class="checkbox checkbox-primary">
-                <input name="roles[]" v-model="selectedRoles" v-bind:id="'role-'+role.id" v-bind:value="role.id" type="checkbox" @click="getRolePermissions(role.id, index);">
+    <div  class="row pt-2"  style="padding-left: 20px">
+        <div  v-for="(role, index) in roles" class="col-md-3 pb-2"  v-if="role.name != 'Super Admin' ">
+            <div class="checkbox checkbox-primary" >
+                <input name="roles[]" v-bind:id="'role-'+role.id" v-bind:value="role.id" type="checkbox" @click="getRolePermissions(role.id, index);">
                 <label v-bind:for="'role-'+role.id">
                     @{{role.name}}
                 </label>
