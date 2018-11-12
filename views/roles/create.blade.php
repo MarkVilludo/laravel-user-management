@@ -61,8 +61,8 @@
                     </div>
                     <div class="col-md-2 text-center">
                         <div class="checkbox checkbox-primary" v-if="permission.module_functions.length == 4">
-                            <input name="full_access[]" :checked="permission.checked" v-bind:id="permission.module+'-'+permission.id" v-bind:value="permission.id" type="checkbox" v-bind:class="permission.module" @change="selectAll(permission)">
-                            <label v-bind:for="permission.module+'-'+permission.id">
+                            <input name="full_access[]" :checked="permission.checked" v-bind:id="permission.module" v-bind:value="permission.id" type="checkbox" v-bind:class="permission.module" @change="selectAll(permission)">
+                            <label v-bind:for="permission.module">
                             </label>
                         </div>
                     </div>
@@ -131,13 +131,15 @@
             }
 
             //update module functions check all
-            $.each(selectModule.module_functions, function( index, permission ) {
-                if(permission.checked == false) {
+            if (selectModule.checked) {
+                $.each(selectModule.module_functions, function( index, permission ) {
                     permission.checked = true;
-                } else{
+                });   
+            } else {
+                $.each(selectModule.module_functions, function( index, permission ) {
                     permission.checked = false;
-                }
-            });   
+                });   
+            }
         }, 
         selectEachPermission(seletectedModule, selectedPermission, moduleFunctions) {
             console.log(seletectedModule)
