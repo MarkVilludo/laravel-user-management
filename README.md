@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-permission.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-permission)
 [![Build Status](https://img.shields.io/travis/spatie/laravel-permission/master.svg?style=flat-square)](https://travis-ci.org/spatie/laravel-permission)
-[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/a25f93ac-5e8f-48c8-a9a1-5d3ef3f9e8f2.svg?style=flat-square)](https://insight.sensiolabs.com/projects/a25f93ac-5e8f-48c8-a9a1-5d3ef3f9e8f2)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-permission.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-permission)
 [![StyleCI](https://styleci.io/repos/42480275/shield)](https://styleci.io/repos/42480275)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-permission.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-permission)
@@ -13,32 +12,20 @@ was [introduced in version 5.1.11](http://christoph-rumpel.com/2015/09/new-acl-f
 
 Once installed you can do stuff like this:
 ```php
-// Adding permissions to a user
-$user->givePermissionTo('edit articles');
 
-// Adding permissions via a role
+// Assign role to specific user
 $user->assignRole('writer');
 
-$role->givePermissionTo('edit articles');
 ```
 
-You can test if a user has a permission with Laravel's default `can` function:
+You can test if a user has a permission with specific permission and module name.
 ```php
-$user->can('edit articles');
+$user->canAccess('View','Users');
 ```
 
-If you are using a Laravel version lower than 5.2.28, and want a drop-in middleware to check permissions, check out [our authorize package](https://github.com/spatie/laravel-authorize).
+## Licensed
 
-Spatie is webdesign agency in Antwerp, Belgium. You'll find an overview of all 
-our open source projects [on our website](https://spatie.be/opensource).
-
-## Postcardware
-
-You're free to use this package (it's [MIT-licensed](LICENSE.md)), but if it makes it to your production environment we highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using.
-
-Our address is: Spatie, Samberstraat 69D, 2060 Antwerp, Belgium.
-
-The best postcards will get published on the open source page on our website.
+You're free to use this package (it's [MIT-licensed](LICENSE.md)), but if it makes it to your production environment we highly appreciate you sending us a message.
 
 ## Installation
 
@@ -68,6 +55,11 @@ running the migrations:
 
 ```bash
 $ php artisan migrate
+```
+
+You can publish Initial Permission Seeder, then update it's content depending on your needs.
+```bash
+php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="seeder"
 ```
 
 You can publish the config-file with:
@@ -180,39 +172,169 @@ You can publish the views with:
 php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="views"
 ```
 
+You can publish the public assets with:
+```bash
+php artisan vendor:publish --provider="MarkVilludo\Permission\PermissionServiceProvider" --tag="assets"
+```
+
 ## Usage
 
-First add the `MarkVilludo\Permission\Traits\HasRoles` trait to your User model:
+First add the `MarkVilludo\Permission\Traits\HasRoles` trait to your User model, then paste the ff code below.
 ```php
-use Illuminate\Foundation\Auth\User as Authenticatable;
+<?php
+
+namespace App;
+
+
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use MarkVilludo\Permission\Traits\HasRoles;
+use MarkVilludo\Permission\Models\Permission;
+use MarkVilludo\Permission\Models\RoleHasPermission;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    use Notifiable;
     use HasRoles;
-    
-    // ...
-    
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password',
+        'first_name', 'last_name', 'email', 'password', 'is_expire_access', 'expiration_date',
     ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+
+    public function scopeFilterByName($query, $key)
+    {
+        return $query->where('first_name', 'like', '%' . $key . '%')
+            ->orWhere('last_name', 'like', '%' . $key . '%')
+            ->orWhere('email', 'like', '%' . $key . '%');
+    }
+
+    //get by roles
+    public function scopeFilterByRole($query, $role)
+    {
+        if ($role) {
+            return  $query->withAndWhereHas('roles', function ($query) use ($role) {
+                    $query->where('id', $role);
+            });
+        }
+    }
+
+    //for withandwherehas
+    public function scopeWithAndWhereHas($query, $relation, $constraint)
+    {
+        return $query->whereHas($relation, $constraint)->with([$relation => $constraint]);
+    }
+    
+    public static function checkAccess($permissionName, $moduleName)
+    {
+        // return $permissionName.'-'.$moduleName;
+        $roleIds = auth()->user()->roles->pluck('id');
+        //get permission id base on permission and module name
+        $permissionData = Permission::where('name', $permissionName)
+                                        ->where('module', $moduleName)
+                                        ->first();
+        if ($permissionData) {
+            $checkIfHasPermission = RoleHasPermission::whereIn('role_id', $roleIds)
+                                        ->where('permission_id', $permissionData->id)
+                                        ->first();
+
+            if ($checkIfHasPermission) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }
+
+
+```
+## Setup ``env``
+We send password in add new user. \n So we need to Define each mail driver, username, password, encryption and mail from. ex:
+
+```
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.sendgrid.net
+MAIL_PORT=587
+MAIL_USERNAME=apikey
+MAIL_PASSWORD=SG.QSaTRD4xQkSULUbbZbF1yg.oDr7zwINfMbaLtvNHFToUYj35ZXxqq6l-SXUN1TpBFs123
+MAIL_ENCRYPTION=tls
+MAIL_FROM=mark.villudo@synergy88digital.com
+
 ```
 
+## Setup User Resource: `php artisan make: resource UserResource` 
+
+Define each return data from user table.
+```
+  return 
+        [
+            'id' => $this->id,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'email' => $this->email,
+	    'type' => $this->type, //nullable for special purposes.
+            'expiration_date' => date('M d, Y', strtotime($this->expiration_date)),
+            'email_verified_at' => $this->email_verified_at,
+            'is_expire_access' => $this->is_expire_access,
+            'created_at' => $this->created_at->format('M d, Y') .' / '.$this->created_at->format('h:i a'),
+            'roles' => $this->roles->pluck('name')
+        ];
+
+```
+
+## Setup Role Resource: `php artisan make: resource RoleResource` 
+
+Define each return data from roles table and it's permissions.
+```
+  return 
+        [
+            'id' => $this->id,
+            'name' => $this->name,
+            'permissions' => $this->permissions
+        ];
+```
+
+## Access User Management pages 
+To access the package controller by placing another \ in front you tell Laravel to start searching in the root namespace.
+
+```
+
+//include this part in your routes/web.php
+Route::group(['middleware' => 'auth'], function() {
+
+	Route::resource('users', '\MarkVilludo\Permission\Controllers\UserController');
+	Route::resource('roles', '\MarkVilludo\Permission\Controllers\RoleController');
+	Route::resource('permissions', '\MarkVilludo\Permission\Controllers\PermissionController');
+});
+
+```
 This package allows for users to be associated with roles. Permissions can be associated with roles.
-A `Role` and a `Permission` are regular Eloquent models. They can have a name and can be created like this:
+A `Role` and a `Permission` are regular Eloquent models. Role can have a name and can be created like this:
 
 ```php
 use MarkVilludo\Permission\Models\Role;
-use MarkVilludo\Permission\Models\Permission;
 
 $role = Role::create(['name' => 'writer']);
-$permission = Permission::create(['module' => 'Articles', 'name' => 'edit articles']);
+
 ```
 
 The `HasRoles` adds Eloquent relationships to your models, which can be accessed directly or used as a base query:
@@ -229,32 +351,10 @@ $users = User::role('writer')->get(); // Only returns users with the role 'write
 ```
 The scope can accept a string, a `MarkVilludo\Permission\Models\Role` object or an `\Illuminate\Support\Collection` object.
 
-### Using permissions
-A permission can be given to a user:
+### Using permissions check if can access in specific permission ``Add`` in ``Users`` module.
+
 ```php
-$user->givePermissionTo('edit articles');
-
-// You can also give multiple permission at once
-$user->givePermissionTo('edit articles', 'delete articles');
-
-// You may also pass an array
-$user->givePermissionTo(['edit articles', 'delete articles']);
-```
-
-A permission can be revoked from a user:
-```php
-$user->revokePermissionTo('edit articles');
-```
-
-You can test if a user has a permission:
-```php
-$user->hasPermissionTo('edit articles');
-```
-
-Saved permissions will be registered with the `Illuminate\Auth\Access\Gate` class. So you can
-test if a user has a permission with Laravel's default `can` function:
-```php
-$user->can('edit articles');
+$user->canAccess('Add','Users');
 ```
 
 ### Using roles and permissions
@@ -311,26 +411,6 @@ A permission can be revoked from a role:
 $role->revokePermissionTo('edit articles');
 ```
 
-The `givePermissionTo` and `revokePermissionTo` functions can accept a 
-string or a `Spatie\Permission\Models\Permission` object.
-
-Saved permission and roles are also registered with the `Illuminate\Auth\Access\Gate` class.
-```php
-$user->can('edit articles');
-```
-
-All permissions of roles that user is assigned to are inherited to the 
-user automatically. In addition to these permissions particular permission can be assigned to the user too. For instance: 
-```php
-$role->givePermissionTo('edit articles');
-$user->assignRole('writer');
-
-$user->givePermissionTo('delete articles');
-```
-In above example a role is given permission to edit articles and this role is assigned to a user. Now user can edit articles and additionaly delete articles. The permission of 'delete articles' is his direct permission because it is assigned directly to him. When we call `$user->hasDirectPermission('delete articles')` it returns `true` and `false` for `$user->hasDirectPermission('edit articles')`. 
-
-This method is useful if one has a form for setting permissions for roles and users in his application and want to restrict to change inherited permissions of roles of user, i.e. allowing to change only direct permissions of user.
-
 You can list all of theses permissions:
 ```php
 // Direct permissions
@@ -383,6 +463,13 @@ currently logged in user has all or any of a given list of roles.
 @endhasallroles
 ```
 
+```php
+@if(auth()->user()->checkAccess('View', 'Users'))
+    <button class="btn btn-success btn-custom waves-effect w-md waves-light m-b-5 pull-left">View User</button>
+@endif
+
+```
+
 You can use Laravel's native `@can` directive to check if a user has a certain permission.
 
 ## Using a middleware
@@ -407,10 +494,6 @@ public function handle($request, Closure $next, $role, $permission)
        abort(403);
     }
     
-    if (! $request->user()->can($permission)) {
-       abort(403);
-    }
-
     return $next($request);
 }
 ```
@@ -465,8 +548,6 @@ If you discover any security related issues, please email [mark.villudo@synergy8
 ## Credits
 -  Spatie
 - [Freek Van der Herten](https://github.com/freekmurze)
-- [All Contributors](../../contributors)
-
 
 This package is heavily based on [Jeffrey Way](https://twitter.com/jeffrey_way)'s awesome [Laracasts](https://laracasts.com) lessons
 on [roles and permissions](https://laracasts.com/series/whats-new-in-laravel-5-1/episodes/16). His original code
@@ -478,69 +559,6 @@ can be found [in this repo on GitHub](https://github.com/laracasts/laravel-5-rol
 - [BeatSwitch/lock-laravel](https://github.com/BeatSwitch/lock-laravel)
 - [Zizaco/entrust](https://github.com/Zizaco/entrust)
 - [bican/roles](https://github.com/romanbican/roles)
-
-## Additional Features
-## Additional setup (Features) collective Html
-   //required laravel collective in composer json
-   "laravelcollective/html": "^5.4.0",
-## Routes
-    //include this in routes/web
-    Route::get('/login', function () {
-    return view('laravel-permission::auth.login');
-    });
-
-    Route::get('/register', function () {
-        return view('laravel-permission::auth.register');
-    });
-    Route::get('/home', function () {
-        return view('index');
-    });
-    Route::get('/logout', function () {
-        Auth::logout();
-        return view('laravel-permission::auth.login');
-    });
- ## Works also on Policies
-    //create policy 
-    php artisan make:policy RolePermissionsPolicy
-    <?php
-
-namespace App\Policies;
-
-use App\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
-use MarkVilludo\Permission\Models\Role;
-use MarkVilludo\Permission\Models\Permission;
-
-class RolePermissionsPolicy
-{
-    use HandlesAuthorization;
-
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-    public function index(User $user, $permission){
-        if (auth()->user()->hasPermissionTo($permission)) {
-           return true;
-        } else {
-            return false;
-        }
-    }
-}
-//Register policy in AuthServiceProvider
-    use App\Policies\RolePermissionsPolicy;
-    
-    public function boot()
-    {
-        $this->registerPolicies();
-
-        Gate::define('check-role-permission', 'App\Policies\RolePermissionsPolicy@index');
-    }
 
 ## License
 
