@@ -5,8 +5,7 @@
 @section('content')
 
  <!-- //Main content page. -->
-
-<div class='col-lg-6 col-md-6 col-lg-offset-4' style="padding-top: 40px">
+<div class='col-lg-8 col-md-8 col-lg-offset-4 content' style="padding-top: 40px">
     <div class="row" style="padding-bottom: 20px">
         <div class="col-lg-6 col-md-6 col-sm-6">
             <h4 class="pull-left">Add Permission</h4>
@@ -19,32 +18,41 @@
     </div>
     {{-- @include ('errors.list') --}}
     {{ Form::open(array('url' => 'permissions')) }}
-
     <div class="form-group">
-        {{ Form::label('name', 'Permission Name') }}
+        <label for="first_name"> Permission Name
+            <small>(Required)</small>
+        </label>
         {{ Form::text('name', '', array('class' => 'form-control')) }}
     </div>
     <br>
     <div class="form-group">
-        {{ Form::label('module', 'Module') }}
-        {{ Form::text('module', '', array('class' => 'form-control')) }}
+        <label for="first_name"> Module
+            <small>(Required)</small>
+        </label>
+        <div>
+            <select name="module" class="form-control">
+                @if ($permissions)
+                    @foreach ($permissions as $permission)
+                        <option value="{{$permission->module}}">
+                            {{$permission->module}}
+                        </option>
+                    @endforeach
+                @endif
+            </select>
+        </div>
     </div>
     <br>
-    <h5><b>Assign to Specific Roles</b></h5>
-        <div class="row">
-            <div class='col-lg-6 form-group'>
-                @foreach ($roles as $role)
-                    {{ Form::checkbox('roles[]',  $role->id) }}
-                    {{ Form::label($role->name, ucfirst($role->name)) }}<br>
-
-                @endforeach
+    <h5><b>Assign Permission to Role</b></h5>
+    <div class="row pb-2">
+        @foreach ($roles as $role)
+            <div class="col-md-2 col-lg-2">
+                {{ Form::checkbox('roles[]',  $role->id) }}
+                {{ Form::label($role->name, ucfirst($role->name)) }}
             </div>
-        </div>
-    <br>
+        @endforeach
+    </div>
     {{ Form::submit('Save', array('class' => 'btn btn-block btn-primary')) }}
-
     {{ Form::close() }}
-
 </div>
 <!-- End main content page -->
 @endsection

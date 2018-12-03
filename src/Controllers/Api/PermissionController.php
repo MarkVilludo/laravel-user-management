@@ -36,7 +36,30 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        //
+        $permissionsArray = Permission::all();
+
+        // begin the iteration for grouping module name
+        $permissions = [];
+        $modulefunctionArray = [];
+        $result = [];
+
+        foreach ($permissionsArray as $key => $module) {
+            $modulefunctionArray[$module->module] = ['module' => $module->module, 'guard_name' => $module->guard_name, 'id' => $module->id];
+
+        }
+        foreach ($modulefunctionArray as $keyModule => $value) {
+            $moduleFunction = [];
+            $moduleName = $value['module'];
+            foreach ($permissionsArray as $key => $module) {
+                if ($module->module == $moduleName) {
+                    $moduleFunction[] = ['id' => $module->id,'module' => $module->module,'name' => $module->name, 'checked' => false];
+                }
+            }
+            $permissions[] = ['module' => $value['module'],'id' => $value['id'],  'checked' => false, 'module_functions' => $moduleFunction];
+        }
+
+        $data['permissions'] = $permissions;
+        return Response::json($data, 200);
     }
 
     /**
@@ -83,28 +106,6 @@ class PermissionController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -130,20 +131,5 @@ class PermissionController extends Controller
             $statusCode = 200;
         }
         return Response::json(['data' => $data], $statusCode);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {   
-        return Config::get('app_messages.NotYetimplemented');
-        //reason need to remove role attach in $id (permission).
-
-        // $permission = Permission::findOrFail($id);
-        // $permission->delete();
     }
 }

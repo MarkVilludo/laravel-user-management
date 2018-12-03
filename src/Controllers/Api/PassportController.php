@@ -56,9 +56,4 @@ class PassportController extends Controller
 
         return Response::json(['success'=>$success], $this->successStatus);
     }
-    /**
-     * details api
-     *
-     * @return \Illuminate\Http\Response
-     */
 }

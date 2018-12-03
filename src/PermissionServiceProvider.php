@@ -31,6 +31,26 @@ class PermissionServiceProvider extends ServiceProvider
                 __DIR__.'/../resources/migrations/create_permission_tables.php.stub' => $this->app->databasePath().'/migrations/'.$timestamp.'_create_permission_tables.php',
             ], 'migrations');
         }
+
+        //publish also assets in public folder for the css and js plugins
+         $this->publishes([
+           __DIR__.'/../assets' => public_path('/assets'),
+        ],'assets');
+        //end
+
+        //publish also controllers
+         $this->publishes([
+           __DIR__.'/../src/Controllers/' => 'app/Http/Controllers/Permissions',
+        ],'controllers');
+        //end
+        
+         //publish also models
+         $this->publishes([
+           __DIR__.'/../src/Models/' => 'app/Models',
+        ],'controllers');
+        //end
+    
+            
         //register routes
         $this->registerRoutes();
 

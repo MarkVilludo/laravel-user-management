@@ -19,12 +19,11 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
 
         if (View::exists('roles.index')) {
-            return view('roles.index')->with('roles', $roles);
+            return view('roles.index');
         } else {
-            return view('laravel-permission::roles.index')->with('roles', $roles);
+            return view('laravel-permission::roles.index');
         }
     }
 
@@ -57,10 +56,12 @@ class RoleController extends Controller
             $permissions[] = ['module' => $value['module'],'id' => $value['id'], 'module_functions' => $moduleFunction];
         }
 
+        $data['permissions'] = $permissions;
+
         if (View::exists('roles.create')) {
-            return view('roles.create', ['permissions'=>$permissions]);
+            return view('roles.create', $data);
         } else {
-            return view('laravel-permission::roles.create', ['permissions'=>$permissions]);
+            return view('laravel-permission::roles.create', $data);
         }
     }
 
@@ -73,7 +74,7 @@ class RoleController extends Controller
     public function store(Request $request)
     {   
         $this->validate($request, [
-            'name'=>'required|unique:roles|max:10',
+            'name'=>'required|unique:roles|max:20',
             'permissions' =>'required',
             ]
         );
@@ -147,6 +148,7 @@ class RoleController extends Controller
 
         $data['role'] = $role;
         $data['permissions'] = $permissions;
+
         if (View::exists('roles.edit')) {
             return view('roles.edit', $data);
         } else {
@@ -199,13 +201,18 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        $role = Role::findOrFail($id);
-        $role->delete();
+        $role = Role::find($id);
 
-        if (View::exists('roles.index')) {
-            return redirect()->route('roles.index')->with('flash_message', 'Role deleted!');
+        if ($role) {
+            $role->delete();
+            $data['message'] = 'Successfully deleted role.';
+            $statusCode = 200;
+
         } else {
-            return redirect()->route('laravel-permission::roles.index')->with('flash_message', 'Role deleted!');
+            $data['message'] = 'Not found role.';
+            $statusCode = 404;
         }
+
+        return response()->json($data, $statusCode);
     }
 }

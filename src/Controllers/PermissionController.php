@@ -39,12 +39,13 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        $roles = Role::get();
+        $data['roles'] = Role::get();
+        $data['permissions'] = Permission::select('module')->distinct()->get();
 
-        if (View::exists('permissions.create')) {
-            return view('permissions.create')->with('roles', $roles);
+        if (View::exists('permissions.create', $data)) {
+            return view('permissions.create', $data);
         } else {
-            return view('laravel-permission::permissions.create')->with('roles', $roles);
+            return view('laravel-permission::permissions.create', $data);
         }
     }
 

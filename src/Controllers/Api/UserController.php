@@ -23,25 +23,52 @@ class UserController extends Controller
     public function __construct(User $user) {
         $this->user = $user;
     }
-    public function index()
+    public function index(Request $request)
     {   
-       
-        $users = UserResource::collection($this->user->active()->paginate(10));
+
+        if ($request->search || $request->role) {
+            $users = $this->user->filterByName($request->search)
+                                ->filterByRole($request->role)
+                                ->paginate(10);
+        } else {
+            $users = $this->user->paginate(10);
+        }
+
 
         if ($users) {
-            $data['message'] = 'Users list';
-            $statusCode = 200;
+          $data['message'] = 'Users list';
+          $statusCode = 200;
         } else {
-            $data['message'] = 'No users available';
-            $statusCode = 200;
+          $data['message'] = 'No users available';
+          $statusCode = 200;
         }
-        $data['users'] = $users;
-        $data['roles'] = Role::get();
-        return Response::json(['data' => $data], $statusCode);
-       
+        return UserResource::collection($users);
     }
+
      /**
-     * Display user orders
+     * Display no pagination
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getUsers(Request $request)
+    {
+       $user = User::filterByName($request->search)
+                   ->filterByRole($request->role)
+                   ->where('type', 'admin')
+                   ->get();
+
+       if ($user) {
+           $data = UserResource::collection($user);
+           return $data;
+       } else {
+           $data['message'] = 'There is no players available.';
+           $statusCode = 200;
+           return response()->json($data, $statusCode);
+       }
+    }
+    
+    /**
+     * get profile details
      *
      * @return \Illuminate\Http\Response
      */
@@ -49,10 +76,7 @@ class UserController extends Controller
     {   
        
         // return $user_id;
-        $user = $this->user->where('id', $user_id)->with('orders')->with('wishlist')
-                            ->with('product_reviews')
-                            ->with('billing_address')
-                            ->with('shipping_address')
+        $user = $this->user->where('id', $user_id)
                             ->first();
         if ($user) {
             $data['user'] = new UserResource($user);
@@ -63,7 +87,28 @@ class UserController extends Controller
             $statusCode = 400;
         }
 
-        return Response::json($data, $statusCode);
+        return response()->json($data, $statusCode);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function checkExistEmail(Request $request)
+    {
+     
+      $user = $this->user->where('email', $request->email)->first();
+
+      if ($user) {
+        $data['exist'] = true;
+      } else {
+        $data['exist'] = false;
+      }
+      
+      return Response::json($data, 200);
     }
 
     /**
@@ -125,9 +170,7 @@ class UserController extends Controller
     public function show($id)
     {
         if (auth()->user()->can('check-role-permission','Show user details')) {
-            $user =  $this->user->where('id', $id)->with('orders')
-                                ->with('billing_address')->with('shipping_address')
-                                ->with('wishlist.product')
+            $user =  $this->user->where('id', $id)
                                 ->first();
 
             $roles = Role::get(); //Get all roles
@@ -198,16 +241,5 @@ class UserController extends Controller
             }
         }
         return Response::json($data, $statusCode);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

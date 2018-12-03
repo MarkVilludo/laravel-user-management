@@ -2,9 +2,11 @@
 
 namespace MarkVilludo\Permission\Controllers\Api;
 
+use App\Http\Resources\RoleResource;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use MarkVilludo\Permission\Models\Role;
+use MarkVilludo\Permission\Models\RoleHasPermission;
 use MarkVilludo\Permission\Models\Permission;
 use Auth;
 use Response;
@@ -13,10 +15,11 @@ use Config;
 
 class RoleController extends Controller
 {   
-    public function __construct(Permission $permission, Role $role) 
+    public function __construct(Permission $permission, RoleHasPermission $rolePermission, Role $role) 
     {   
         $this->role = $role;
         $this->permission = $permission;
+        $this->rolePermission = $rolePermission;
         // $this->middleware(['auth', 'isAdmin']);
     }
     /**
@@ -26,17 +29,34 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return $role = $this->role->all();
+        $roles = $this->role->paginate(20);
+
+        if ($roles) {
+          $data['message'] = 'roles list';
+          $statusCode = 200;
+        } else {
+          $data['message'] = 'No roles available';
+          $statusCode = 200;
+        }
+
+        return RoleResource::collection($roles);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function rolePermissions(Request $request)
     {
-        //
+        
+        $rolePermissions = $this->rolePermission->where('role_id', $request->role_id)->get();
+
+        $getPermissionsArray = [];
+        foreach ($rolePermissions as $rolePermission) {
+            $getPermissionsArray[] = [
+                'role_id' => $rolePermission->role_id,
+                'permission_id' => $rolePermission->permission_id,
+                'name' => $rolePermission->roleAccess->module.' '.$rolePermission->permission_name
+            ];
+        }
+        $statusCode = 200;
+        return Response::json(['data' => $getPermissionsArray], $statusCode);
     }
 
     /**
@@ -85,17 +105,6 @@ class RoleController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -103,7 +112,46 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        //
+        // return 'test';
+        $role = Role::findOrFail($id);
+        $permissionsArray = Permission::all();
+
+        // begin the iteration for grouping module name
+        $permissions = [];
+        $modulefunctionArray = [];
+        $result = [];
+
+        foreach ($permissionsArray as $key => $module) {
+            $modulefunctionArray[$module->module] = ['module' => $module->module, 'guard_name' => $module->guard_name, 'id' => $module->id];
+
+        }
+        foreach ($modulefunctionArray as $keyModule => $value) {
+            $moduleFunction = [];
+            $moduleName = $value['module'];
+            $isAllAccessModule = [];
+            foreach ($permissionsArray as $key => $module) {
+                if ($module->module == $moduleName) {
+                    $rolePermissionExist = $this->rolePermission->where('permission_id', $module->id)
+                                                                ->where('role_id', $id)
+                                                                ->first();
+
+
+
+                    $moduleFunction[] = ['id' => $module->id,'module' => $module->module,'name' => $module->name, 'checked' => $rolePermissionExist ? 1 : 0];
+
+                 
+                    $isAllAccessModule[] = $rolePermissionExist ? 1 : 0;
+                }
+            }
+            //count all module function with access
+            $permissions[] = ['module' => $value['module'],'id' => $value['id'], 'module_functions' => $moduleFunction, 'checked' => array_sum($isAllAccessModule) == 4 ? true : false];
+        }
+
+        $data['role'] = $role;
+        $data['permissions'] = $permissions;
+
+
+        return Response::json($data, 200);
     }
 
     /**
@@ -152,16 +200,5 @@ class RoleController extends Controller
             }
         }
         return Response::json(['data' => $data], $statusCode);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
