@@ -43,7 +43,14 @@ class PermissionServiceProvider extends ServiceProvider
            __DIR__.'/../src/Controllers/' => 'app/Http/Controllers/Permissions',
         ],'controllers');
         //end
-
+        
+         //publish also models
+         $this->publishes([
+           __DIR__.'/../src/Models/' => 'app/Models',
+        ],'controllers');
+        //end
+    
+            
         //register routes
         $this->registerRoutes();
 
