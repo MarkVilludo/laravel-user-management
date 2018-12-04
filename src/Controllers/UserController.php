@@ -57,7 +57,6 @@ class UserController extends Controller
     }
 
     /**
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -86,7 +85,7 @@ class UserController extends Controller
         $user->save();
 
 
-        $this->sendCredentials($user, $randomPassword);
+        //$this->sendCredentials($user, $randomPassword);
 
         $roles = $request['roles'];
 
