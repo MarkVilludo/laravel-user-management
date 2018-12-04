@@ -86,7 +86,7 @@ class UserController extends Controller
         $user->save();
 
 
-        $this->sendCredentials($user, $randomPassword);
+        //$this->sendCredentials($user, $randomPassword);
 
         $roles = $request['roles'];
 
