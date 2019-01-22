@@ -16,11 +16,6 @@ You can test if a user has a permission with specific permission and module name
 ```php
 $user->canAccess('View','Users');
 ```
-
-## Licensed
-
-You're free to use this package (it's [MIT-licensed](LICENSE.md)), but if it makes it to your production environment we highly appreciate you sending us a message.
-
 ## Installation
 
 You can install the package via Composer:
